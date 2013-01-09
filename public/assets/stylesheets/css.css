@@ -19,6 +19,7 @@ canvas {
 
 body {
 	background-color: white;
+	background-image: url(/assets/images/checker2.png);
 	background-size: auto;
 	background-image:url(/assets/images/checker.png);
 	-webkit-transform: translateZ(0);

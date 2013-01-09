@@ -30,7 +30,6 @@ function Master() {
 		base.play();
 		startTime = Date.now();
 		loop(startTime);
-
 	}
 	
 
