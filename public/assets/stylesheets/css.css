@@ -20,6 +20,7 @@ canvas {
 body {
 	background-color: white;
 	background-size: auto;
+	background-image:url(/assets/images/checker.png);
 	-webkit-transform: translateZ(0);
 }
 body.invert {
