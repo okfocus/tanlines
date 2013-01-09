@@ -8,6 +8,9 @@ function Master() {
 
 	this.ready = function(){
 		if (base.mediaCount != base.readyCount) {
+			if (base.readyCount >= base.mediaCount - 3) {
+				console.log((base.mediaCount - base.readyCount) + " left")
+			}
 			return;
 		}
 		console.log("ready!");

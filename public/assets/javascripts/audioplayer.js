@@ -15,6 +15,7 @@ function AudioPlayer(instrument, src) {
     base.audio.appendChild(source);
   }
   function audioLoaded () {
+  	console.log("audio " + src + " ready");
 		master.readyCount += 1;
 		master.ready();
 	}
