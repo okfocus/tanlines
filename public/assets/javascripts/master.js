@@ -31,11 +31,15 @@ function Master() {
 		startTime = Date.now();
 		loop(startTime);
 
+	}
+	
+
+	this.showAll = function() {
 		for (var i = 0; i < instruments.length; i++) {
 			instruments[i].show();
 		}
 	}
-	
+
 	this.play = function (){
 		for (var i = 0; i < instruments.length; i++) {
 			instruments[i].audio.seekToBeginning();
