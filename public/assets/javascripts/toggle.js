@@ -6,6 +6,7 @@ function Toggle (instrument, key) {
 
   base.checkbox = document.createElement("input");
   base.checkbox.type = "checkbox";
+	base.checkbox.className = key;
   base.checkbox.checked = false;
   base.checkbox.onclick = function(){
 		if ( base.checkbox.checked ) {

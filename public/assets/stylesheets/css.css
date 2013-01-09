@@ -13,7 +13,7 @@ video {
 }
 
 body {
-	background: white url(checker2.png);
+	background: white url(/assets/checker2.png);
 }
 body.invert {
 	background: black url(checker-black.png);
@@ -27,4 +27,41 @@ canvas {
 	position: absolute;
 	top: 0;
 	left: 0;
+}
+#controls span input{
+		-moz-appearance: none;
+		-webkit-appearance: none;
+		-o-appearance: none;
+		outline: 0;
+		border: 0;
+		border-radius: 0;
+		background-size:20px;
+		background-position:center;
+		cursor:pointer;
+		background-repeat:no-repeat;
+		width:40px;
+		height:40px;
+		display:inline-block;
+		border:2px outset #ccc;
+}
+#controls span input:checked{
+	border:2px inset #ccc;
+}
+#controls span input.synths{
+	background-image:url(/assets/images/synth.png);
+}
+#controls span input.piano{
+	background-image:url(/assets/images/piano.png);
+}
+#controls span input.vocals{
+	background-image:url(/assets/images/mic.png);
+}
+#controls span input.strings{
+	background-image:url(/assets/images/violin.png);
+}
+#controls span input.drums{
+	background-image:url(/assets/images/drums.png);
+}
+#controls span input.guitars{
+	background-image:url(/assets/images/guitar.png);
 }
