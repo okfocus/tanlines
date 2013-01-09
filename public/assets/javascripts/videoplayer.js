@@ -19,6 +19,7 @@ function VideoPlayer(instrument, src) {
 	
 	base.auto = true;
 	
+	var max_thresh = src in thresholds ? thresholds[src] : 190;
 	var opacity = 0;
 	var destOpacity = 0;
 	
@@ -33,7 +34,7 @@ function VideoPlayer(instrument, src) {
   init();
 	
   function init() {
-		master.mediaCount += 1;
+		master.add();
     source.src = videoFileUrl;
     source.type = 'video/mp4; codecs="avc1.42E01E"';
     video.addEventListener('loadedmetadata', loaded, false);
@@ -55,7 +56,6 @@ function VideoPlayer(instrument, src) {
 		document.body.appendChild(output);
 
   	console.log("video " + src + " ready ", width, height);
-		master.readyCount += 1;
 		master.ready();
   }
   
@@ -122,7 +122,7 @@ function VideoPlayer(instrument, src) {
 			}
 		}
 
-		var thresh = THRESHOLD * opacity;
+		var thresh = THRESHOLD * opacity * max_thresh;
 
     if (INVERT) {
     	invert(imageData, thresh);

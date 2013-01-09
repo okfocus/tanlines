@@ -6,13 +6,22 @@ function Master() {
 	var startTime = 0;
 	var paused = false;
 
+	this.add = function(){
+		base.mediaCount++;
+		$("#loaded").attr("max", base.mediaCount);
+		$("#loaded").attr("value", base.readyCount);
+	}
+
 	this.ready = function(){
+		master.readyCount++;
+		$("#loaded").attr("value", base.readyCount);
 		if (base.mediaCount != base.readyCount) {
 			if (base.readyCount >= base.mediaCount - 3) {
 				console.log((base.mediaCount - base.readyCount) + " left")
 			}
 			return;
 		}
+		$("#loader").hide();
 		console.log("ready!");
 
 		base.play();

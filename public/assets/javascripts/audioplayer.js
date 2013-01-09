@@ -6,7 +6,7 @@ function AudioPlayer(instrument, src) {
   var audioFileUrl = "/assets/sounds/" + src + ".mp3";
   
   function audioInit(){
-		master.mediaCount += 1;
+		master.add();
     source.src = audioFileUrl;
     source.type = 'audio/mp3';
 
@@ -16,7 +16,6 @@ function AudioPlayer(instrument, src) {
   }
   function audioLoaded () {
   	console.log("audio " + src + " ready");
-		master.readyCount += 1;
 		master.ready();
 	}
 	base.seekToBeginning = function () {

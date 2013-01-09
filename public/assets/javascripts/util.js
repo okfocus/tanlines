@@ -16,9 +16,10 @@ var stats = new Stats();
 stats.setMode( 0 );
 document.body.appendChild( stats.domElement );
 
-var THRESHOLD = 190;
+var THRESHOLD = 1.0;
 document.getElementById("threshold").onchange = function(){
-  THRESHOLD = parseInt(this.value);
+  THRESHOLD = parseInt(this.value) / 100;
+  $("#thresh").val(this.value);
 };
 var INVERT = false;
 document.getElementById("invert").onclick = function(){

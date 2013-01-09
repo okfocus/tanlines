@@ -7,6 +7,16 @@ var positions = {
 	strings: [],
 };
 
+var thresholds = {
+	'piano': 196,
+	'floortom': 202,
+	'guitar-voice': 202,
+	'microkorg': 213,
+	'keyboard-with-amp': 200,
+	'drums-guitar': 187,
+	'strings': 173,
+}
+
 var timing = {
 	'piano': [
 		[  0.0,  280.00]	
