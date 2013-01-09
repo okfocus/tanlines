@@ -177,7 +177,7 @@ function VideoPlayer(instrument, src) {
     base.y = clamp(newy, 0, window.innerHeight - height);
     output.style.left = base.x + "px";
     output.style.bottom = base.y + "px";
-    output.style.zIndex = output.style.bottom;
+    output.style.zIndex = window.innerHeight - base.y;
   }
 }
 
