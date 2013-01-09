@@ -11,12 +11,20 @@ html,body {
 video {
 	display: none;
 }
+canvas {
+	display: none;
+}
 
 body {
-	background: white url(checker2.png);
+	background-color: white;
+	background-image: url(/assets/images/checker2.png);
+	background-size: auto;
+	-webkit-transform: translateZ(0);
 }
 body.invert {
-	background: black url(checker-black.png);
+	background-color: black;
+	background-image: url(/assets/images/checker-black.png);
+	background-size: auto;
 }
 
 canvas {
