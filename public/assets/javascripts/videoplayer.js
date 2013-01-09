@@ -1,7 +1,7 @@
 
-var zIndex = 0;
 function VideoPlayer(instrument, src) {
   var base = this;
+  base.src = src;
   var video = document.createElement("video");
   var source = document.createElement("source");
 
@@ -31,6 +31,9 @@ function VideoPlayer(instrument, src) {
   output.style.position = "absolute";
   base.output = output;
 	
+	base.width = 0;
+	base.height = 0;
+	
   init();
 	
   function init() {
@@ -44,14 +47,14 @@ function VideoPlayer(instrument, src) {
   function loaded () {
     buffer.width = video.videoWidth;
     buffer.height = video.videoHeight;
-    width = video.videoWidth;
-    height = video.videoHeight;
+    base.width = width = video.videoWidth;
+    base.height = height = video.videoHeight;
     output.width = width - 4;
     output.height = height - 4;
     video.currentTime = Math.random() * video.duration;
     video.play();
-    output.style.width = width + "px";
-    output.style.height = height + "px";
+    output.style.width = base.width + "px";
+    output.style.height = base.height + "px";
     base.setXY(base.x, base.y);
 		document.body.appendChild(output);
 
@@ -167,14 +170,14 @@ function VideoPlayer(instrument, src) {
     startX = e.pageX;
     startY = e.pageY;
     dragging = base;
-    output.style.zIndex = ++zIndex;
   }
 
   base.setXY = function(newx, newy) {
-    base.x = clamp(newx, 0, $(window).width() - width);
-    base.y = clamp(newy, 0, $(window).height() - height);
+    base.x = clamp(newx, 0, window.innerWidth - width);
+    base.y = clamp(newy, 0, window.innerHeight - height);
     output.style.left = base.x + "px";
     output.style.bottom = base.y + "px";
+    output.style.zIndex = output.style.bottom;
   }
 }
 
@@ -195,4 +198,16 @@ window.onmouseup = function(){
     dragging.output.className = "";
     dragging = false;
   }
+}
+var oldWidth = window.innerWidth;
+var oldHeight = window.innerHeight;
+window.onresize = function(){
+	for (var i = 0; i < videos.length; i++) {
+		var video = videos[i];
+		var x_percent = video.x / (oldWidth - video.width);
+		var y_percent = video.y / (oldHeight - video.height);
+		video.setXY(x_percent * (window.innerWidth - video.width), y_percent * (window.innerHeight - video.height));
+	}
+	oldWidth = window.innerWidth;
+	oldHeight = window.innerHeight;
 }

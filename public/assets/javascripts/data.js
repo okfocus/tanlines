@@ -48,7 +48,11 @@ var timing = {
 		[215.959,  248.00]
 	],
 	'strings': [
-		[ 127.274, 134.00]
+		// they are playing here
+//		[ 127.274, 134.00]
+		// this is the duration of the main section
+		[ 71.642,  248.00]
+
 	]
 };
 
