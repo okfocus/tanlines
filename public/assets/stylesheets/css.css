@@ -13,12 +13,19 @@ html,body {
 video {
 	display: none;
 }
+canvas {
+	display: none;
+}
 
 body {
-	background: white url(/assets/images/checker.png);
+	background-color: white;
+	background-size: auto;
+	-webkit-transform: translateZ(0);
 }
 body.invert {
-	background: black url(checker-black.png);
+	background-color: black;
+	background-image: url(/assets/images/checker-black.png);
+	background-size: auto;
 }
 
 canvas {
@@ -156,4 +163,19 @@ p{
 }
 #controls span input.guitars{
 	background-image:url(/assets/images/guitar.png);
+}
+
+#loader {
+	width: 250px;
+	padding: 10px;
+	box-shadow: 0 3px 5px #888;
+	position: absolute;
+	top: 20%;
+	left: 50%;
+	margin-left: -135px;
+	text-align: center;
+}
+#loader #loaded {
+	width: 100%;
+	height: 20px;
 }

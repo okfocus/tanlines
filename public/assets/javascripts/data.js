@@ -1,30 +1,51 @@
 var positions = {
-	piano: [],
-	drum: [],
+	'piano':             [ 0.15, 0.30 ],
+	'floortom':          [ 0.72, 0.40 ],
+	'keyboard-with-amp': [ 0.30, 0.40 ],
+	'drums-guitar':      [ 0.50, 0.45 ],
+	'guitar-voice':      [ 0.60, 0.11 ],
+	'microkorg':         [ 0.40, 0.15 ],
+	'strings':           [ 0.85, 0.32 ]
+/*
+	drum:    [],
 	guitars: [],
-	synths: [],
-	drums: [],
+	synths:  [],
+	drums:   [],
 	strings: [],
+*/
 };
+
+var thresholds = {
+	'piano': 196,
+	'floortom': 202,
+	'guitar-voice': 202,
+	'microkorg': 213,
+	'keyboard-with-amp': 200,
+	'drums-guitar': 187,
+	'strings': 173,
+}
 
 var timing = {
 	'piano': [
-		[  0.0,  260.00]	
+		[  0.0,  280.00]	
 	],
 	'floortom': [
-		[ 15.9,  237.00]
+		[ 15.462,  200.40],
+		[215.959,  249.00]
 	],
 	'guitar-voice': [
-		[ 51.347, 237.00]
+		// voice enters at 47.676
+		[ 31.440, 280.00]
 	],
 	'microkorg': [
-		[ 70.569,  237.00]
+		[ 71.642,  248.00]
 	],
 	'keyboard-with-amp': [
-		[ 70.569,  237.00]
+		[ 71.642,  248.00]
 	],
 	'drums-guitar': [
-		[ 77.569,  237.00]
+		[ 71.642,  200.40],
+		[215.959,  248.00]
 	],
 	'strings': [
 		[ 127.274, 134.00]

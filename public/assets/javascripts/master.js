@@ -6,20 +6,40 @@ function Master() {
 	var startTime = 0;
 	var paused = false;
 
-	this.ready = function(){
+	this.add = function(){
+		base.mediaCount++;
+		$("#loaded").attr("max", base.mediaCount);
+		$("#loaded").attr("value", base.readyCount);
+	}
+
+	this.loaded = function(){
+		master.readyCount++;
+		$("#loaded").attr("value", base.readyCount);
 		if (base.mediaCount != base.readyCount) {
 			if (base.readyCount >= base.mediaCount - 3) {
 				console.log((base.mediaCount - base.readyCount) + " left")
 			}
 			return;
 		}
+		$("#loader").hide();
 		console.log("ready!");
-
+		base.ready();
+	}
+	
+	this.ready = function(){
 		base.play();
 		startTime = Date.now();
 		loop(startTime);
+
 	}
 	
+
+	this.showAll = function() {
+		for (var i = 0; i < instruments.length; i++) {
+			instruments[i].show();
+		}
+	}
+
 	this.play = function (){
 		for (var i = 0; i < instruments.length; i++) {
 			instruments[i].audio.seekToBeginning();
@@ -31,8 +51,10 @@ function Master() {
 			videos[i].seekToBeginning();
 		}
 	}
+	
 	this.pause = function (){
 	}
+	
 	this.seek = function(){
 	}
 	

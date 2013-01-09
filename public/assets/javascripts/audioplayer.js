@@ -6,18 +6,17 @@ function AudioPlayer(instrument, src) {
   var audioFileUrl = "/assets/sounds/" + src + ".mp3";
   
   function audioInit(){
-		master.mediaCount += 1;
     source.src = audioFileUrl;
     source.type = 'audio/mp3';
 
     base.audio.addEventListener('loadedmetadata', audioLoaded, false);
     base.audio.addEventListener('ended', base.seekToBeginning, false);
     base.audio.appendChild(source);
+		master.add();
   }
   function audioLoaded () {
   	console.log("audio " + src + " ready");
-		master.readyCount += 1;
-		master.ready();
+		master.loaded();
 	}
 	base.seekToBeginning = function () {
 		base.audio.pause();

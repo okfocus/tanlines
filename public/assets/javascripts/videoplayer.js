@@ -19,13 +19,14 @@ function VideoPlayer(instrument, src) {
 	
 	base.auto = true;
 	
+	var max_thresh = src in thresholds ? thresholds[src] : 190;
 	var opacity = 0;
 	var destOpacity = 0;
 	
   var videoFileUrl = "/assets/videos/" + src + ".mp4";
 	
-  base.x = rand(window.innerWidth * 3/4);
-  base.y = rand(window.innerHeight * 3/4);
+	base.x = rand(window.innerWidth * 3/4);
+	base.y = rand(window.innerHeight * 3/4);
 
   output.style.position = "absolute";
   base.output = output;
@@ -33,12 +34,12 @@ function VideoPlayer(instrument, src) {
   init();
 	
   function init() {
-		master.mediaCount += 1;
     source.src = videoFileUrl;
     source.type = 'video/mp4; codecs="avc1.42E01E"';
     video.addEventListener('loadedmetadata', loaded, false);
     video.addEventListener('ended', base.seekToBeginning, false);
     video.appendChild(source);
+		master.add();
   }
   function loaded () {
     buffer.width = video.videoWidth;
@@ -54,9 +55,15 @@ function VideoPlayer(instrument, src) {
     base.setXY(base.x, base.y);
 		document.body.appendChild(output);
 
+		if (src in positions) {
+			base.x = Math.floor( positions[src][0] * window.innerWidth - width/2 );
+			base.y = Math.floor( positions[src][1] * window.innerHeight );
+			console.log(src, base.x, base.y);
+			base.setXY(base.x, base.y);
+		}
+
   	console.log("video " + src + " ready ", width, height);
-		master.readyCount += 1;
-		master.ready();
+		master.loaded();
   }
   
 	base.show = function(){
@@ -122,7 +129,7 @@ function VideoPlayer(instrument, src) {
 			}
 		}
 
-		var thresh = THRESHOLD * opacity;
+		var thresh = THRESHOLD * opacity * max_thresh;
 
     if (INVERT) {
     	invert(imageData, thresh);
@@ -141,7 +148,7 @@ function VideoPlayer(instrument, src) {
 		// out.restore();
 
     output.style.left = base.x + "px";
-    output.style.top = base.y + "px";
+    output.style.bottom = base.y + "px";
   }
 
   output.onmouseover = function(e){
@@ -167,7 +174,7 @@ function VideoPlayer(instrument, src) {
     base.x = clamp(newx, 0, $(window).width() - width);
     base.y = clamp(newy, 0, $(window).height() - height);
     output.style.left = base.x + "px";
-    output.style.top = base.y + "px";
+    output.style.bottom = base.y + "px";
   }
 }
 
@@ -179,7 +186,7 @@ var dragging = false;
 window.onmousemove = function(e){
   if (dragging) {
     var newX = x + e.pageX - startX;
-    var newY = y + e.pageY - startY;
+    var newY = y + startY - e.pageY;
     dragging.setXY(newX, newY);
   }
 }
