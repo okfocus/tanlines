@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Knewave|Julius+Sans+One);
+
 html,body {
 	margin: 0;
 	padding: 0;
@@ -13,7 +15,7 @@ video {
 }
 
 body {
-	background: white url(/assets/checker2.png);
+	background: white url(/assets/images/checker.png);
 }
 body.invert {
 	background: black url(checker-black.png);
@@ -28,6 +30,96 @@ canvas {
 	top: 0;
 	left: 0;
 }
+
+header{
+	width:100%;
+	text-align:center;
+}
+
+header *{
+		margin:0;
+}
+
+@-webkit-keyframes a {
+  0% {
+    opacity: 0;
+    -o-transform: translate3d(0, -60px, 0);
+    -ms-transform: translate3d(0, -60px, 0);
+    -moz-transform: translate3d(0, -60px, 0);
+    -webkit-transform: translate3d(0, -60px, 0);
+    transform: translate3d(0, -60px, 0); }
+
+  30% {
+    opacity: 1;
+    -o-transform: translate3d(0, 5px, 0);
+    -ms-transform: translate3d(0, 5px, 0);
+    -moz-transform: translate3d(0, 5px, 0);
+    -webkit-transform: translate3d(0, 5px, 0);
+    transform: translate3d(0, 5px, 0); }
+
+  60% {
+    -o-transform: translate3d(0, -2px, 0);
+    -ms-transform: translate3d(0, -2px, 0);
+    -moz-transform: translate3d(0, -2px, 0);
+    -webkit-transform: translate3d(0, -2px, 0);
+    transform: translate3d(0, -2px, 0); }
+
+  100% {
+    -o-transform: translate3d(0, 0px, 0);
+    -ms-transform: translate3d(0, 0px, 0);
+    -moz-transform: translate3d(0, 0px, 0);
+    -webkit-transform: translate3d(0, 0px, 0);
+    transform: translate3d(0, 0px, 0); } 
+}
+@-webkit-keyframes b {
+0% {
+	opacity: 0;
+  -o-transform: translate3d(0, -40px, 0);
+  -ms-transform: translate3d(0, -40px, 0);
+  -moz-transform: translate3d(0, -40px, 0);
+  -webkit-transform: translate3d(0, -40px, 0);
+  transform: translate3d(0, -40px, 0);
+}
+
+30% {
+  opacity: 1;
+  -o-transform: translate3d(0, 5px, 0);
+  -ms-transform: translate3d(0, 5px, 0);
+  -moz-transform: translate3d(0, 5px, 0);
+  -webkit-transform: translate3d(0, 5px, 0);
+  transform: translate3d(0, 5px, 0); }
+
+100% {
+  opacity: 1;
+  -o-transform: translate3d(0, 0px, 0);
+  -ms-transform: translate3d(0, 0px, 0);
+  -moz-transform: translate3d(0, 0px, 0);
+  -webkit-transform: translate3d(0, 0px, 0);
+  transform: translate3d(0, 0px, 0);
+} }
+h1{
+	font-family: 'Knewave', cursive;
+	-webkit-animation-name:a;
+	-webkit-animation-duration:2s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-delay:0s;
+}
+
+h2 {
+	font-family: 'Julius Sans One', sans-serif;
+	-webkit-animation-name:b;
+	-webkit-animation-duration:2s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-delay:0s;
+}
+p{
+	font-size:13px;
+	-webkit-animation-name:b;
+	-webkit-animation-duration:3s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-delay:0s;
+}
+
 #controls span input{
 		-moz-appearance: none;
 		-webkit-appearance: none;
