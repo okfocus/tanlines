@@ -12,7 +12,7 @@ function Master() {
 		$("#loaded").attr("value", base.readyCount);
 	}
 
-	this.ready = function(){
+	this.loaded = function(){
 		master.readyCount++;
 		$("#loaded").attr("value", base.readyCount);
 		if (base.mediaCount != base.readyCount) {
@@ -23,10 +23,17 @@ function Master() {
 		}
 		$("#loader").hide();
 		console.log("ready!");
-
+		base.ready();
+	}
+	
+	this.ready = function(){
 		base.play();
 		startTime = Date.now();
 		loop(startTime);
+
+		for (var i = 0; i < instruments.length; i++) {
+			instruments[i].show();
+		}
 	}
 	
 	this.play = function (){
@@ -40,8 +47,10 @@ function Master() {
 			videos[i].seekToBeginning();
 		}
 	}
+	
 	this.pause = function (){
 	}
+	
 	this.seek = function(){
 	}
 	

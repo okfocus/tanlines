@@ -1,10 +1,18 @@
 var positions = {
-	piano: [],
-	drum: [],
+	'piano':             [ 0.15, 0.30 ],
+	'floortom':          [ 0.72, 0.40 ],
+	'keyboard-with-amp': [ 0.30, 0.40 ],
+	'drums-guitar':      [ 0.50, 0.45 ],
+	'guitar-voice':      [ 0.60, 0.11 ],
+	'microkorg':         [ 0.40, 0.15 ],
+	'strings':           [ 0.85, 0.32 ]
+/*
+	drum:    [],
 	guitars: [],
-	synths: [],
-	drums: [],
+	synths:  [],
+	drums:   [],
 	strings: [],
+*/
 };
 
 var thresholds = {
