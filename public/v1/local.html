@@ -1,0 +1,319 @@
+<!doctype html>
+<html>
+<head>
+<title>Tomato test</title>
+<style type="text/css">
+html,body { margin: 0; padding: 0; width:100%;height:100%;overflow:hidden; }
+#buffer { display: none; }
+video { display: none; }
+body { background: white url(checker2.png); }
+canvas { cursor: pointer; border: 1px transparent solid; }
+canvas.hover { border: 1px dashed #000; }
+</style>
+</head>
+<body>
+<div id="controls">
+<input id="threshold" type="range" min="0" max="190" value="190">
+</div>
+</body>
+<script src="http://asdf.us/js/jquery.js"></script>
+<script src="/stats.min.js"></script>
+<script>
+  window.requestAnimFrame = (function(){
+      return  window.requestAnimationFrame       || 
+              window.webkitRequestAnimationFrame || 
+              window.mozRequestAnimationFrame    || 
+              window.oRequestAnimationFrame      || 
+              window.msRequestAnimationFrame     || 
+              function( callback ){
+                window.setTimeout(callback, 1000 / 60);
+              };
+    })();
+</script>
+<script>
+
+var audioEnabled = true;
+
+var stats = new Stats();
+stats.setMode( 0 );
+document.body.appendChild( stats.domElement );
+
+var THRESHOLD = 190;
+document.getElementById("threshold").onchange = function(){
+  THRESHOLD = parseInt(this.value);
+};
+
+if (audioEnabled) {
+  var context = getAudioContext();
+//  var compressor = context.createDynamicsCompressor();
+  var mix = context.createGainNode();
+  mix.gain.value = 1.0;
+  mix.connect(context.destination);
+//  mix.connect(compressor);
+//  compressor.connect(context.destination);
+}
+var players = [
+/*
+  new TomatoPlayer('1cropped'),
+  new TomatoPlayer('1cropped2'),
+  new TomatoPlayer('1croppedsmaller1'),
+  new TomatoPlayer('1croppedsmaller3'),
+  new TomatoPlayer('1croppedsmaller2'),
+  new TomatoPlayer('1croppedsmaller3'),
+  new TomatoPlayer('1croppedsmaller2'),
+  new TomatoPlayer('1croppedsmaller3'),
+*/
+  new TomatoPlayer('guitar_drums_shorter'),
+  new TomatoPlayer('1croppedsmaller2'),
+  new TomatoPlayer('9cropped'),
+//  new TomatoPlayer('tomato-vibes-outlines-google-glitch')
+];
+
+
+function getAudioContext(){
+  if (typeof AudioContext == "function") {
+    return new AudioContext();
+  } else if (typeof webkitAudioContext == "function") {
+    return new webkitAudioContext();
+  } else {
+    throw new Error('AudioContext not supported. :(');
+  }
+}
+
+function rand(x) {
+  return Math.floor(Math.random() * x);
+}
+var zIndex = 0;
+var id = 0;
+function TomatoPlayer(src) {
+  var base = this;
+  base.id = id++;
+  var video = document.createElement("video");
+  var source = document.createElement("source");
+  var buffer = document.createElement("canvas");
+  var output = document.createElement("canvas");
+  var buf = buffer.getContext('2d');
+  var out = output.getContext('2d');
+  var width, height;
+
+  base.ready = false;
+
+  var span = document.createElement("span");
+  document.getElementById("controls").appendChild(span);
+
+  var checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = "checked";
+  checkbox.onclick = function(){
+    out.clearRect(0,0,width,height);
+    output.style.display = checkbox.checked ? "block" : "none";
+  }
+
+  var videoFileUrl = "/" + src + ".mp4";
+  var audioFileUrl = "/" + src + ".wav";
+  var videoReady = false;
+  var audioReady = audioEnabled ? false : true;
+
+  base.x = rand(window.innerWidth * 3/4);
+  base.y = rand(window.innerHeight * 3/4);
+
+  output.style.position = "absolute";
+  base.output = output;
+
+  videoInit();
+  if (audioEnabled) {
+    audioInit();
+  }
+
+  function videoInit(){
+    source.src = videoFileUrl;
+    source.type = 'video/mp4; codecs="avc1.42E01E"';
+
+    video.addEventListener('loadedmetadata', videoLoaded, false);
+    video.addEventListener('ended', videoEnded, false);
+    video.appendChild(source);
+  }
+  function videoLoaded (){
+    buffer.width = video.videoWidth;
+    buffer.height = video.videoHeight;
+    width = video.videoWidth;
+    height = video.videoHeight;
+    output.width = width - 4;
+    output.height = height - 4;
+    video.currentTime = Math.random() * video.duration;
+    video.play();
+    output.style.width = width + "px";
+//    output.style.height = height + "px";
+    base.setXY(base.x, base.y);
+    videoReady = true;
+    done();
+  }
+  function audioInit() {
+    var request = new XMLHttpRequest();
+    request.open("GET", audioFileUrl, true);
+    request.responseType = "arraybuffer";
+ 
+    // Our asynchronous callback
+    request.onload = function() {
+      var audioData = request.response;
+      audioLoaded(audioData);
+    };
+    request.send();
+  }
+
+  var audioSource, volume, panner;
+  function audioLoaded(audioData) {
+    audioSource = context.createBufferSource();
+    audioBuffer = context.createBuffer(audioData, true); // mono = true
+    audioSource.buffer = audioBuffer;
+
+    panner = context.createPanner();
+
+    volume = context.createGainNode();
+    volume.gain.value = 1.0;
+
+    audioSource.connect(volume);
+    volume.connect(panner);
+    panner.connect(mix);
+
+    audioReady = true;
+
+    base.setXY(base.x, base.y);
+    done();
+  }
+
+  base.setGain = function(x) {
+    volume.gain.value = x;
+  }
+  function done () {
+    console.log("ready .." + videoReady + " " + audioReady);
+    if (videoReady && audioReady) {
+      base.ready = true;
+      document.body.appendChild(output);
+      span.appendChild(checkbox);
+      start();
+    }
+  }
+  base.start = function (time) {
+    if (audioEnabled) {
+      audioSource.noteOn(time);
+    }
+    videoEnded();
+  }
+
+
+  function videoEnded () {
+    video.pause();
+    video.currentTime = 0;
+    video.play();
+  }
+
+
+  this.loop = function(){
+    if (!base.ready) return;
+    if (video.currentTime >= video.duration - 0.1) {
+      video.pause(); video.currentTime = 0; video.play();
+    }
+    if (! checkbox.checked) return;
+    buf.drawImage(video, 0, 0);
+    
+    var image = buf.getImageData(0, 0, width, height),
+      imageData = image.data;
+
+    for (var i = 3, len = imageData.length; i < len; i = i + 4) {
+      imageData[i] = imageData[i-2] >= THRESHOLD ? 0 : 255;
+    }
+
+    if (output.className == "hover") {
+    }
+    out.putImageData(image, 0, 0, 0, 0, width, height);
+
+    output.style.left = base.x + "px";
+    output.style.top = base.y + "px";
+    if (dragging != base) {
+//      base.x += Math.floor(Math.random() * 10 - 5);
+//      base.y += Math.floor(Math.random() * 10 - 5);
+    }
+  }
+
+  output.onmouseover = function(e){
+    if (! dragging) {
+      output.className = "hover";
+    }
+  }
+  output.onmouseout = function(e) {
+    if (dragging != base) { //! dragging || dragging.id != base.id) {
+      output.className = "";
+    }
+  }
+  output.onmousedown = function(e){
+    x = base.x;
+    y = base.y;
+    startX = e.pageX;
+    startY = e.pageY;
+    dragging = base;
+    output.style.zIndex = ++zIndex;
+  }
+
+  base.setXY = function(newx, newy) {
+    base.x = newx;
+    base.y = newy;
+    output.style.left = base.x + "px";
+    output.style.top = base.y + "px";
+    if (audioEnabled && audioReady) {
+      var panX = (((newx + width/2) / window.innerWidth) * 2.0 - 1.0) / 2;
+      var panY = (((newy + height/2) / window.innerHeight) * 2.0 - 1.0) / 2;
+      console.log(panX, panY);
+      panner.setPosition(panX, panY, 0);
+    }
+  }
+}
+
+function start(){
+  var ready = 0;
+  for (var i = 0; i < players.length; i++) {
+    if (players[i].ready) ready++;
+  }
+  if (ready != players.length) {
+    console.log('not ready yet');
+    return;
+  }
+  console.log("ready!");
+  startTime = context.currentTime + 0.02;
+  for (var i = 0; i < players.length; i++) {
+    players[i].start(startTime);
+  }
+  loop();
+}
+
+function loop(){
+  requestAnimFrame(loop);
+  stats.begin();
+  for (var i = 0; i < players.length; i++) {
+    players[i].loop();
+  }
+//  document.body.style.background = "rgb(" + [rand(105),rand(105),200 +rand(55)].join(",") + ")";
+  stats.end();
+}
+
+var startX = 0;
+var startY = 0;
+var x = 0;
+var y = 0;
+var dragging = false;
+window.onmousemove = function(e){
+  if (dragging) {
+    var newX = x + e.pageX - startX;
+    var newY = y + e.pageY - startY;
+    dragging.setXY(newX, newY);
+  }
+}
+window.onmouseup = function(){
+  if (dragging) {
+    dragging.output.className = "";
+    dragging = false;
+  }
+}
+</script>
+</html>
+

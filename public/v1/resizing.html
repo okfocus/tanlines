@@ -1,0 +1,667 @@
+<!doctype html>
+<html>
+<head>
+<title>Tanlines</title>
+<style type="text/css">
+html,body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+#buffer { display: none; }
+video { display: none; }
+body { background: white url(checker2.png); }
+body.invert { background: black url(checker-black.png); }
+body.solarize { background: black url(checker-solarize.png); }
+body.hue { background-image: url(tvtestpattern.png); background-size: contain; background-position: center; }
+body.invert #controls, body.solarize #controls { color: white; }
+canvas { cursor: pointer; border: 1px transparent solid; }
+canvas.resize { cursor: move; }
+
+#master { position: absolute; top: 0; left: 0; }
+</style>
+</head>
+<body>
+<div id="controls">
+<input type="checkbox" id="invert"> invert<br>
+<input type="checkbox" id="solarize"> solarize<br>
+<input type="checkbox" id="hue"> hue<br>
+<input id="threshold" type="range" min="0" max="190" value="190">
+<br>
+<span id="position">0.0</span>
+<br>
+</div>
+</body>
+<script src="http://asdf.us/js/jquery.js"></script>
+<script src="/stats.min.js"></script>
+<script>
+  window.requestAnimFrame = (function(){
+      return  window.requestAnimationFrame       || 
+              window.webkitRequestAnimationFrame || 
+              window.mozRequestAnimationFrame    || 
+              window.oRequestAnimationFrame      || 
+              window.msRequestAnimationFrame     || 
+              function( callback ){
+                window.setTimeout(callback, 1000 / 60);
+              };
+    })();
+</script>
+<script>
+
+//////////////////////////////////////////////////////////////////
+// DOOB STATS
+
+var stats = new Stats();
+stats.setMode( 0 );
+document.body.appendChild( stats.domElement );
+
+//////////////////////////////////////////////////////////////////
+// THRESHOLD SLIDER / INVERT UI
+
+var THRESHOLD = 190;
+document.getElementById("threshold").onchange = function(){
+  THRESHOLD = parseInt(this.value);
+};
+var INVERT = false;
+document.getElementById("invert").onclick = function(){
+  INVERT = this.checked;
+  document.body.className = INVERT ? "invert" : "";
+};
+var SOLARIZE = false;
+document.getElementById("solarize").onclick = function(){
+  SOLARIZE = this.checked;
+  document.body.className = SOLARIZE ? "solarize" : "";
+};
+var HUE = false;
+document.getElementById("hue").onclick = function(){
+  HUE = this.checked;
+  document.body.className = HUE ? "hue" : "";
+};
+
+//////////////////////////////////////////////////////////////////
+// CORNER/SIDE RESIZING ENUM
+
+var TOP = 1,
+TOP_RIGHT = 2,
+RIGHT = 3,
+BOTTOM_RIGHT = 4,
+BOTTOM = 5,
+BOTTOM_LEFT = 6;
+LEFT = 7,
+TOP_LEFT = 8;
+
+var HUES = [
+	[255,0,0],
+	[255,128,0],
+	[255,255,0],
+	[0,255,255],
+	[0,128,255],
+	[0,0,255],
+	[128,0,255],
+	[255,0,128]
+];
+function hue(n) { return HUES[Math.floor(n/2 % 8)]; }
+
+//////////////////////////////////////////////////////////////////
+// SET UP WEB AUDIO API
+
+var audioEnabled = false;
+
+if (audioEnabled) {
+  var context = getAudioContext();
+  var compressor = context.createDynamicsCompressor();
+  var mix = context.createGainNode();
+  mix.gain.value = 1.0;
+//  mix.connect(context.destination);
+  mix.connect(compressor);
+  compressor.connect(context.destination);
+}
+
+function getAudioContext(){
+  if (typeof AudioContext == "function") {
+    return new AudioContext();
+  } else if (typeof webkitAudioContext == "function") {
+    return new webkitAudioContext();
+  } else {
+    throw new Error('AudioContext not supported.');
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////
+// LOAD EVERYTHING
+
+var timing = {
+	drums: [
+		[ 0, Math.Infinity ]
+	],
+	piano: [
+		[ 0, Math.Infinity ]
+	],
+	guitars: [
+		[ 0, Math.Infinity ]
+	]
+};
+
+var players = [];
+var mainAudio = new AudioPlayer("soldier");
+
+init();
+
+function init() {
+  var request = new XMLHttpRequest();
+  request.open("GET", "/videolist", true);
+ 
+  // Our asynchronous callback
+  request.onload = function() {
+    var files = JSON.parse(request.responseText);
+    for (var i in files) {
+      players.push( new VideoPlayer( files[i] ) )
+    }
+  };
+  request.send();
+}
+
+
+//////////////////////////////////////////////////////////////////
+// MAIN AUDIO PLAYER
+
+function AudioPlayer(src) {
+	var base = this;
+	var audio = document.createElement("audio");
+  var source = document.createElement("source");
+  var audioFileUrl = "/" + src + ".mp3";
+  
+  base.ready = false;
+  
+  function audioInit(){
+    source.src = audioFileUrl;
+    source.type = 'audio/mp3';
+
+    audio.addEventListener('loadedmetadata', audioLoaded, false);
+    audio.addEventListener('ended', base.seekToBeginning, false);
+    audio.appendChild(source);
+  }
+  function audioLoaded (){
+    console.log("audio ready ..");
+		base.ready = true;
+		start();
+	}
+	base.seekToBeginning = function () {
+		audio.pause();
+		audio.currentTime = 0;
+//		audio.play();
+	}
+  base.start = function (time) {
+    base.seekToBeginning();
+  }
+  audioInit();
+}
+
+//////////////////////////////////////////////////////////////////
+// ENORMOUS CLASS FOR INDIVIDUAL VIDEO PLAYERS
+
+var zIndex = 0;
+var id = 0;
+function VideoPlayer(src) {
+  var base = this;
+  base.id = id++;
+  var video = document.createElement("video");
+  var source = document.createElement("source");
+  var buffer = document.createElement("canvas");
+  var output = document.createElement("canvas");
+  var buf = buffer.getContext('2d');
+  var out = output.getContext('2d');
+  var width, height;
+	var opacity = 0.0, destOpacity = 0.0;
+	
+	var times = timing[src];
+	var timeIndex = 0;
+  base.ready = false;
+  base.$output = $(output);
+	
+  var span = document.createElement("span");
+  document.getElementById("controls").appendChild(span);
+
+  var checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = null;
+  checkbox.onclick = function(){
+    out.clearRect( 0,0, base.naturalWidth, base.naturalHeight );
+    if ( checkbox.checked ) {
+			output.style.display = "block";
+			destOpacity = 1.0;
+//			volume.gain.value = 1.0;
+		} else {
+			destOpacity = 0.0;
+//			volume.gain.value = 0.0;
+  	}
+  }
+
+  var videoFileUrl = "/" + src + ".mp4";
+  var audioFileUrl = "/" + src + ".mp3";
+  var videoReady = false;
+  var audioReady = audioEnabled ? false : true;
+
+  base.x = rand(window.innerWidth * 1/2);
+  base.y = rand(window.innerHeight * 1/2);
+
+	base.m = {};
+
+  output.style.position = "absolute";
+  base.output = output;
+
+  videoInit();
+  if (audioEnabled) {
+    audioInit();
+  }
+
+  function videoInit(){
+    source.src = videoFileUrl;
+    source.type = 'video/mp4; codecs="avc1.42E01E"';
+
+    video.addEventListener('loadedmetadata', videoLoaded, false);
+    video.addEventListener('ended', base.seekToBeginning, false);
+    video.appendChild(source);
+  }
+  function videoLoaded (){
+    buffer.width = video.videoWidth;
+    buffer.height = video.videoHeight;
+
+    base.naturalWidth = video.videoWidth;
+    base.naturalHeight = video.videoHeight;
+    base.width = base.naturalWidth * 2
+    base.height = base.naturalHeight * 2
+    
+    output.width = base.naturalWidth - 4;
+    output.height = base.naturalHeight - 4;
+    output.style.display = "none";
+    
+    output.style.width = base.width + "px";
+    output.style.height = base.height + "px";
+
+		base.m = {
+			top: base.y,
+			left: base.x,
+			width: base.width,
+			height: base.height
+		};
+
+    base.setXY(base.x, base.y);
+    
+    videoReady = true;
+    done();
+  }
+  
+  function audioInit() {
+    var request = new XMLHttpRequest();
+    request.open("GET", audioFileUrl, true);
+    request.responseType = "arraybuffer";
+ 
+    // Our asynchronous callback
+    request.onload = function() {
+      context.decodeAudioData(request.response, function(buffer) {
+        audioLoaded(buffer);
+      });
+    };
+    request.send();
+  }
+  var audioSource, volume, panner;
+  function audioLoaded(audioBuffer) {
+    audioSource = context.createBufferSource();
+    // audioBuffer = context.createBuffer(audioData, true); // mono = true
+    audioSource.buffer = audioBuffer;
+
+    panner = context.createPanner();
+
+    volume = context.createGainNode();
+    volume.gain.value = 1.0;
+
+    audioSource.connect(volume);
+    volume.connect(panner);
+    panner.connect(mix);
+
+    audioReady = true;
+
+    base.setXY(base.x, base.y);
+    done();
+  }
+
+  base.setGain = function(x) {
+    volume.gain.value = x;
+  }
+  function done () {
+    console.log("ready .." + videoReady + " " + audioReady);
+    if (videoReady && audioReady) {
+      base.ready = true;
+      document.body.appendChild(output);
+      span.appendChild(checkbox);
+      start();
+    }
+  }
+  base.start = function (time) {
+    if (audioEnabled) {
+      audioSource.noteOn(time);
+    }
+    base.seekToBeginning();
+  }
+
+	this.seekToBeginning = function(){
+		video.pause();
+		video.currentTime = 0;
+		video.play();
+	}
+	this.seekToBeginningAndPause = function(){
+		video.pause();
+		video.currentTime = 0;
+	}
+	this.play = function(){
+		video.play();
+	}
+	this.getTimeIndex = function(){
+		console.log( timeIndex, times[timeIndex] );
+	}
+	this.getCheckbox = function(){ return checkbox };
+  this.loop = function(t){
+    if (!base.ready) return;
+    if (video.currentTime >= video.duration - 0.1) {
+    	this.seekToBeginning();
+    }
+
+    if (! checkbox.checked) {
+    	// if this segment has started
+			if (timeIndex >= 0 && times[timeIndex][0] < t) {
+				checkbox.checked = true;
+				checkbox.onclick();
+				this.play();
+			}
+    	if (opacity == 0 && destOpacity == 0) return;
+    }
+    else {
+			if (timeIndex >= 0 && times[timeIndex][1] < t) {
+				checkbox.checked = false;
+				checkbox.onclick();
+				timeIndex++;
+				console.log(src, timeIndex, t, times[timeIndex], checkbox.checked);
+				if (timeIndex >= times.length) timeIndex = -1;
+				this.seekToBeginningAndPause();
+			}
+    }
+    
+    buf.drawImage(video, 0, 0);
+    
+    var image = buf.getImageData(0, 0, base.naturalWidth, base.naturalHeight),
+      imageData = image.data;
+    if (imageData[0] === 0) return;
+
+		if (opacity != destOpacity) {
+			opacity = (opacity * 9 + destOpacity) / 10;
+			if (destOpacity == 0 && opacity <= 0.03) {
+				opacity = 0;
+				output.style.display = "none";
+				return;
+			} else if (destOpacity == 1 && opacity > 0.97) {
+				opacity = 1;
+			}
+		}
+		var thresh = THRESHOLD * opacity;
+
+    if (INVERT) {
+      for (var i = 0, len = imageData.length; i < len; i = i + 4) {
+        imageData[i+3] = imageData[i] >= thresh ? 0 : 255;
+        imageData[i] = 255 - imageData[i];
+        imageData[i+1] = 255 - imageData[i+1];
+        imageData[i+2] = 255 - imageData[i+2];
+      }
+    }
+    else if (SOLARIZE) {
+      for (var i = 0, len = imageData.length; i < len; i = i + 4) {
+        imageData[i+3] = imageData[i] >= thresh ? 0 : 255;
+        imageData[i] = imageData[i] > 96 ? 255 - imageData[i] : imageData[i];
+        imageData[i+1] = imageData[i+1] > 96 ? 255 - imageData[i+1] : imageData[i+1];
+        imageData[i+2] = imageData[i+2] > 96 ? 255 - imageData[i+2] : imageData[i+2];
+      }
+    }
+    else if (HUE) {
+      for (var i = 0, len = imageData.length; i < len; i = i + 4) {
+      	var h = hue(t * 6 + imageData[i]/20);
+        imageData[i+3] = imageData[i] >= thresh ? 0 : 255;
+        imageData[i] = h[0];
+        imageData[i+1] = h[1];
+        imageData[i+2] = h[2];
+      }
+    }
+    else {
+      for (var i = 3, len = imageData.length; i < len; i = i + 4) {
+        imageData[i] = imageData[i-2] >= thresh ? 0 : 255;
+      }
+    }
+
+    if (output.className.match("hover")) {
+			var width = base.naturalWidth, height = base.naturalHeight;
+      var tt = Math.floor( t * 10 ) % 8;
+      var off = ((height - 5) * width) % 8;
+      for (var i = 0; i < width; i++) {
+        var q = (i + tt) % 8 < 4 ? 255 : 0;
+        imageData[i * 4 + 0] = q;
+        imageData[i * 4 + 1] = q;
+        imageData[i * 4 + 2] = q;
+        imageData[i * 4 + 3] = 255;
+
+        var bot = (height - 5) * width + i;
+        var q = (off + bot + tt) % 8 < 4 ? 0 : 255;
+        imageData[bot * 4 + 0] = q;
+        imageData[bot * 4 + 1] = q;
+        imageData[bot * 4 + 2] = q;
+        imageData[bot * 4 + 3] = 255;
+      }
+
+      var off = ((height) * width - 6) % 8;
+      for (var i = 0; i < height; i++) {
+        var q = (i + tt) % 8 < 4 ? 255 : 0;
+        imageData[width * i * 4 + 0] = q;
+        imageData[width * i * 4 + 1] = q;
+        imageData[width * i * 4 + 2] = q;
+        imageData[width * i * 4 + 3] = 255;
+
+        var side = ((width * i) + width - 5);
+        var q = (off + i + tt) % 8 < 4 ? 255 : 0;
+        imageData[side * 4 + 0] = q;
+        imageData[side * 4 + 1] = q;
+        imageData[side * 4 + 2] = q;
+        imageData[side * 4 + 3] = 255;
+      }
+    }
+//    out.save();
+//    buf.putImageData(image, 0, 0, 0, 0, width, height);
+//    out.drawImage(buffer, 0,0);
+    out.putImageData(image, 0, 0, 0, 0, base.naturalWidth, base.naturalHeight);
+ //   out.restore();
+  }
+
+  output.onmousemove = function(e){
+    if (! dragging) {
+			var resizing = base.near_edge_of_selection(e, base.m);
+			if (resizing) {
+				output.className = "hover resize";
+			} else {
+				output.className = "hover";
+			}
+    }
+  }
+  output.onmouseout = function(e) {
+    if (dragging != base) {
+      output.className = "";
+    }
+  }
+  output.onmousedown = function(e){
+    x = base.x;
+    y = base.y;
+    startX = e.pageX;
+    startY = e.pageY;
+    dragging = base;
+    output.style.zIndex = ++zIndex;
+    
+		resizing = base.near_edge_of_selection(e, base.m);
+		if (resizing) {
+			resizeMarquee = $.extend({}, base.m);
+		}
+  }
+
+	base.near_edge_of_selection = function (e, m) {
+		var shim = 10,
+		x = e.pageX,
+		y = e.pageY,
+		
+		// bounds checking
+		top_lower    = m.top - shim < y,
+		top_upper    = y < m.top + shim,
+		bottom_lower = m.top + m.height - shim < y,
+		bottom_upper = y < m.top + m.height + shim,
+		left_lower   = m.left - shim < x,
+		left_upper   = x < m.left + shim,
+		right_lower  = m.left + m.width - shim < x,
+		right_upper  = x < m.left + m.width + shim;
+
+		if (top_upper && top_lower) {
+			if (left_upper && left_lower) {
+				return TOP_LEFT;
+			} else if (right_upper && right_lower) {
+				return TOP_RIGHT;
+			} else if (left_lower && right_upper) {
+				return TOP;
+			}
+		} else if (bottom_upper && bottom_lower) {
+			if (left_upper && left_lower) {
+				return BOTTOM_LEFT;
+			} else if (right_upper && right_lower) {
+				return BOTTOM_RIGHT;
+			} else if (left_lower && right_upper) {
+				return BOTTOM;
+			}
+		} else if (top_lower && bottom_upper) {
+			if (left_upper && left_lower) {
+				return LEFT;
+			} else if (right_upper && right_lower) {
+				return RIGHT;
+			}
+		}
+		return false;
+	};
+
+  base.setXY = function(newx, newy) {
+    base.x = clamp(newx, 0, $(window).width() - base.naturalWidth);
+    base.y = clamp(newy, 0, $(window).height() - base.naturalHeight);
+		base.m.top = base.y;
+		base.m.left = base.x;
+    $(output).css(base.m);
+  }
+}
+
+//////////////////////////////////////////////////////////////////
+// LOADING THE VIDEOS
+
+var startTime = 0;
+function start(){
+  var ready = 0;
+  for (var i = 0; i < players.length; i++) {
+    if (players[i].ready) ready++;
+  }
+  if (mainAudio.ready) ready++;
+  if (ready != players.length + 1) {
+    console.log('not ready yet');
+    return;
+  }
+  console.log("ready!");
+  startTime = context && context.currentTime + 0.02;
+  for (var i = 0; i < players.length; i++) {
+    players[i].start(startTime);
+  }
+  startTime = Date.now();
+  mainAudio.start();
+  loop();
+}
+
+//////////////////////////////////////////////////////////////////
+// ANIMATION LOOP SETS THEIR POSITIONS
+
+function loop(t){
+  requestAnimFrame(loop);
+  stats.begin();
+	var position = (t - startTime) / 1000;
+  for (var i = 0; i < players.length; i++) {
+    players[i].loop(position);
+  }
+  document.getElementById("position").innerHTML = position;
+  stats.end();
+}
+
+///////////////////////////////////////////////////////////////
+// DRAGGING THE VIDEOS
+
+var startX = 0;
+var startY = 0;
+var x = 0;
+var y = 0;
+var dragging = false;
+var resizeMarquee;
+window.onmousemove = function(e){
+  if (dragging) {
+
+		if (resizing) {
+			var dy = e.pageY - startY;
+			var dx = e.pageX - startX;
+			var m = resizeMarquee;
+
+			switch (resizing) {
+				case TOP:
+				case TOP_LEFT:
+				case TOP_RIGHT:
+					m.top = clamp(dragging.m.top + dy, dragging.m.top + dy, dragging.m.top + dragging.m.height - 10);
+					m.height = clamp(dragging.m.height - dy, 10, window.innerHeight);
+					break;
+				case BOTTOM:
+				case BOTTOM_LEFT:
+				case BOTTOM_RIGHT:
+					m.height = clamp(dragging.m.height + dy, 10, window.innerHeight);
+					break;
+			}
+			switch (resizing) {
+				case LEFT:
+				case TOP_LEFT:
+				case BOTTOM_LEFT:
+					m.left = clamp(dragging.m.left + dx, dragging.m.left + dx, dragging.m.left + dragging.m.width - 10);
+					m.width = clamp(dragging.m.width - dx, 10, window.innerWidth);
+					break;
+				case RIGHT:
+				case TOP_RIGHT:
+				case BOTTOM_RIGHT:
+					m.width = clamp(dragging.m.width + dx, 10, window.innerWidth);
+					break;
+			}
+			
+			dragging.$output.css(m);
+		}
+		else {
+			var newX = x + e.pageX - startX;
+			var newY = y + e.pageY - startY;
+			dragging.setXY(newX, newY);
+		}
+  }
+}
+window.onmouseup = function(){
+  if (dragging) {
+    if (resizing) {
+    	dragging.m = resizeMarquee;
+    	dragging.y = resizeMarquee.top;
+    	dragging.x = resizeMarquee.left;
+    	dragging.setXY(resizeMarquee.left, resizeMarquee.top);
+    	resizing = false;
+    }
+    dragging.output.className = "";
+    dragging = false;
+  }
+}
+
+function rand(x) { return Math.floor(Math.random() * x); }
+function clamp(x,a,b) { return Math.min(Math.max(x,a),b); }
+
+</script>
+</html>
+

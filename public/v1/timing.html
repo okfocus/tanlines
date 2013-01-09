@@ -1,0 +1,524 @@
+<!doctype html>
+<html>
+<head>
+<title>Tanlines</title>
+<style type="text/css">
+html,body { margin: 0; padding: 0; width:100%;height:100%;overflow:hidden; }
+#buffer { display: none; }
+video { display: none; }
+body { background: white url(checker2.png); }
+body.invert { background: black url(checker-black.png); }
+canvas { cursor: pointer; border: 1px transparent solid; }
+#master { position: absolute; top: 0; left: 0; }
+</style>
+</head>
+<body>
+<div id="controls">
+<input type="checkbox" id="invert"> invert<br>
+<input id="threshold" type="range" min="0" max="200" value="190">
+<br>
+<span id="position">0.0</span>
+<br>
+</div>
+</body>
+<script src="jquery.js"></script>
+<script src="stats.min.js"></script>
+<script>
+  window.requestAnimFrame = (function(){
+      return  window.requestAnimationFrame       || 
+              window.webkitRequestAnimationFrame || 
+              window.mozRequestAnimationFrame    || 
+              window.oRequestAnimationFrame      || 
+              window.msRequestAnimationFrame     || 
+              function( callback ){
+                window.setTimeout(callback, 1000 / 60);
+              };
+    })();
+</script>
+<script>
+
+//////////////////////////////////////////////////////////////////
+// DOOB STATS
+
+var stats = new Stats();
+stats.setMode( 0 );
+document.body.appendChild( stats.domElement );
+
+//////////////////////////////////////////////////////////////////
+// THRESHOLD SLIDER / INVERT UI
+
+var THRESHOLD = 190;
+document.getElementById("threshold").onchange = function(){
+  THRESHOLD = parseInt(this.value);
+};
+var INVERT = false;
+document.getElementById("invert").onclick = function(){
+  INVERT = this.checked;
+  document.body.className = INVERT ? "invert" : "";
+};
+
+//////////////////////////////////////////////////////////////////
+// SET UP WEB AUDIO API
+
+var audioEnabled = false;
+
+if (audioEnabled) {
+  var context = getAudioContext();
+  var compressor = context.createDynamicsCompressor();
+  var mix = context.createGainNode();
+  mix.gain.value = 1.0;
+//  mix.connect(context.destination);
+  mix.connect(compressor);
+  compressor.connect(context.destination);
+}
+
+function getAudioContext(){
+  if (typeof AudioContext == "function") {
+    return new AudioContext();
+  } else if (typeof webkitAudioContext == "function") {
+    return new webkitAudioContext();
+  } else {
+    throw new Error('AudioContext not supported.');
+  }
+}
+var idl = 0;
+
+//////////////////////////////////////////////////////////////////
+// LOAD EVERYTHING
+
+var timing = {
+	drums: [
+		[ 58.569,  237.00]
+	],
+	piano: [
+		[  0.0,  260.00]	
+	],
+	guitars: [
+		[ 1+ 17.695,  32.347],
+		[ 58.569,  237.00]
+	],
+	synth: [
+		[ 58.569,  237.00]
+	],
+	strings: [
+		[ 1+ 80.274, 150.00]
+	],
+	drum: [
+		[ 58.569,  237.00]
+	]
+};
+
+var players = [];
+var mainAudio = new AudioPlayer("tanlines");
+
+init();
+
+function init() {
+  var request = new XMLHttpRequest();
+  request.open("GET", "/videolist", true);
+ 
+  // Our asynchronous callback
+  request.onload = function() {
+    var files = JSON.parse(request.responseText);
+    for (var i in files) {
+      players.push( new VideoPlayer( files[i] ) )
+    }
+  };
+  request.send();
+}
+
+
+//////////////////////////////////////////////////////////////////
+// MAIN AUDIO PLAYER
+
+function AudioPlayer(src) {
+	var base = this;
+	var audio = document.createElement("audio");
+  var source = document.createElement("source");
+  var audioFileUrl = "/" + src + ".mp3";
+  
+  base.ready = false;
+  
+  function audioInit(){
+    source.src = audioFileUrl;
+    source.type = 'audio/mp3';
+
+    audio.addEventListener('loadedmetadata', audioLoaded, false);
+    audio.addEventListener('ended', base.seekToBeginning, false);
+    audio.appendChild(source);
+  }
+  function audioLoaded (){
+    console.log("audio ready ..");
+		base.ready = true;
+		start();
+	}
+	base.seekToBeginning = function () {
+		audio.pause();
+		audio.currentTime = 0.0;
+		setTimeout(function(){ audio.play() }, 2200);
+	}
+  base.start = function () {
+    base.seekToBeginning();
+  }
+  audioInit();
+}
+
+//////////////////////////////////////////////////////////////////
+// ENORMOUS CLASS FOR INDIVIDUAL VIDEO PLAYERS
+
+var zIndex = 0;
+var id = 0;
+function VideoPlayer(src) {
+  var base = this;
+  base.id = id++;
+  var video = document.createElement("video");
+  var source = document.createElement("source");
+  var buffer = document.createElement("canvas");
+  var output = document.createElement("canvas");
+  var buf = buffer.getContext('2d');
+  var out = output.getContext('2d');
+  var width, height;
+	var opacity = 0.0, destOpacity = 0.0;
+	
+	var times = (src in timing) ? timing[src] : timing['piano'];
+	var timeIndex = 0;
+
+	base.auto = true;
+  base.ready = false;
+
+  var span = document.createElement("span");
+  document.getElementById("controls").appendChild(span);
+
+  var checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = null;
+  checkbox.onclick = function(){
+  	base.auto = false;
+    out.clearRect( 0,0, width,height );
+    if ( checkbox.checked ) {
+			output.style.display = "block";
+			destOpacity = 1.0;
+//			volume.gain.value = 1.0;
+		} else {
+			destOpacity = 0.0;
+//			volume.gain.value = 0.0;
+  	}
+  }
+
+  var videoFileUrl = "/" + src + ".mp4";
+  var audioFileUrl = "/" + src + ".mp3";
+  var videoReady = false;
+  var audioReady = audioEnabled ? false : true;
+
+  base.x = rand(window.innerWidth * 1/2);
+  base.y = rand(window.innerHeight * 1/2);
+
+  output.style.position = "absolute";
+  base.output = output;
+
+  videoInit();
+  if (audioEnabled) {
+    audioInit();
+  }
+
+  function videoInit(){
+    source.src = videoFileUrl;
+    source.type = 'video/mp4; codecs="avc1.42E01E"';
+
+    video.addEventListener('loadedmetadata', videoLoaded, false);
+    video.addEventListener('ended', base.seekToBeginning, false);
+    video.appendChild(source);
+  }
+  function videoLoaded (){
+    buffer.width = video.videoWidth;
+    buffer.height = video.videoHeight;
+    width = video.videoWidth;
+    height = video.videoHeight;
+    output.width = width - 4;
+    output.height = height - 4;
+    video.currentTime = Math.random() * video.duration;
+    video.play();
+    output.style.width = width * 1.0  + "px";
+//    output.style.height = height * 1.0 + "px";
+    base.setXY(base.x, base.y);
+    videoReady = true;
+    done();
+  }
+  function audioInit() {
+    var request = new XMLHttpRequest();
+    request.open("GET", audioFileUrl, true);
+    request.responseType = "arraybuffer";
+ 
+    // Our asynchronous callback
+    request.onload = function() {
+      context.decodeAudioData(request.response, function(buffer) {
+        audioLoaded(buffer);
+      });
+    };
+    request.send();
+  }
+
+  var audioSource, volume, panner;
+  function audioLoaded(audioBuffer) {
+    audioSource = context.createBufferSource();
+    // audioBuffer = context.createBuffer(audioData, true); // mono = true
+    audioSource.buffer = audioBuffer;
+
+    panner = context.createPanner();
+
+    volume = context.createGainNode();
+    volume.gain.value = 1.0;
+
+    audioSource.connect(volume);
+    volume.connect(panner);
+    panner.connect(mix);
+
+    audioReady = true;
+
+    base.setXY(base.x, base.y);
+    done();
+  }
+
+  base.setGain = function(x) {
+    volume.gain.value = x;
+  }
+  function done () {
+    console.log("ready .." + videoReady + " " + audioReady);
+    if (videoReady && audioReady) {
+      base.ready = true;
+      document.body.appendChild(output);
+      span.appendChild(checkbox);
+      start();
+    }
+  }
+  base.start = function () {
+    base.seekToBeginningAndPause();
+  }
+
+	this.seekToBeginning = function(){
+		video.pause();
+		video.currentTime = 0;
+		video.play();
+	}
+	this.seekToBeginningAndPause = function(){
+		video.pause();
+		video.currentTime = 0;
+	}
+	this.play = function(){
+		video.play();
+	}
+	this.getTimeIndex = function(){
+		console.log( timeIndex, times[timeIndex] );
+	}
+  var gotImageDataLength = false;
+	this.getCheckbox = function(){ return checkbox };
+  this.loop = function(t){
+    if (!base.ready) return;
+    if (video.currentTime >= video.duration - 0.1) {
+    	this.seekToBeginning();
+    }
+
+		if (base.auto) {
+			if (! checkbox.checked) {
+				// if this segment has started
+				if (timeIndex >= 0 && times[timeIndex][0] < t) {
+					checkbox.checked = true;
+					checkbox.onclick();
+					this.seekToBeginning();
+				}
+				if (opacity == 0 && destOpacity == 0) return;
+			}
+			else {
+				if (times[timeIndex][1] < t) {
+					checkbox.checked = false;
+					checkbox.onclick();
+					timeIndex++;
+					console.log(src, timeIndex, t, times[timeIndex], checkbox.checked);
+					if (timeIndex >= times.length) timeIndex = -1;
+					this.seekToBeginningAndPause();
+				}
+			}
+		}
+    
+    buf.drawImage(video, 0, 0);
+    
+    var image = buf.getImageData(0, 0, width, height),
+      imageData = image.data;
+    
+    if (! gotImageDataLength) {
+    	gotImageDataLength = true;
+    	idl += imageData.length / 4
+    	console.log(imageData.length / 4 + " >> " + idl);
+    }
+    
+    if (imageData[0] === 0) return;
+
+		if (opacity != destOpacity) {
+			opacity = (opacity * 9 + destOpacity) / 10;
+			// opacity = destOpacity;
+			if (destOpacity == 0 && opacity <= 0.03) {
+				opacity = 0;
+				output.style.display = "none";
+				return;
+			} else if (destOpacity == 1 && opacity > 0.97) {
+				opacity = 1;
+			}
+		}
+		var thresh = THRESHOLD * opacity;
+
+    if (INVERT) {
+      for (var i = 0, len = imageData.length; i < len; i = i + 4) {
+        imageData[i+3] = imageData[i] >= thresh ? 0 : 255;
+        imageData[i] = 255 - imageData[i];
+        imageData[i+1] = 255 - imageData[i+1];
+        imageData[i+2] = 255 - imageData[i+2];
+      }
+    }
+    else {
+      for (var i = 3, len = imageData.length; i < len; i = i + 4) {
+        imageData[i] = imageData[i-2] >= thresh ? 0 : 255;
+      }
+    }
+
+    if (output.className == "hover") {
+      var tt = Math.floor( t * 10 ) % 8;
+      var off = ((height - 5) * width) % 8;
+      for (var i = 0; i < width; i++) {
+        var q = (i + tt) % 8 < 4 ? 255 : 0;
+        imageData[i * 4 + 0] = q;
+        imageData[i * 4 + 1] = q;
+        imageData[i * 4 + 2] = q;
+        imageData[i * 4 + 3] = 255;
+
+        var bot = (height - 5) * width + i;
+        var q = (off + bot + tt) % 8 < 4 ? 0 : 255;
+        imageData[bot * 4 + 0] = q;
+        imageData[bot * 4 + 1] = q;
+        imageData[bot * 4 + 2] = q;
+        imageData[bot * 4 + 3] = 255;
+      }
+
+      var off = ((height) * width - 6) % 8;
+      for (var i = 0; i < height; i++) {
+        var q = (i + tt) % 8 < 4 ? 255 : 0;
+        imageData[width * i * 4 + 0] = q;
+        imageData[width * i * 4 + 1] = q;
+        imageData[width * i * 4 + 2] = q;
+        imageData[width * i * 4 + 3] = 255;
+
+        var side = ((width * i) + width - 5);
+        var q = (off + i + tt) % 8 < 4 ? 255 : 0;
+        imageData[side * 4 + 0] = q;
+        imageData[side * 4 + 1] = q;
+        imageData[side * 4 + 2] = q;
+        imageData[side * 4 + 3] = 255;
+      }
+    }
+//    out.save();
+//    buf.putImageData(image, 0, 0, 0, 0, width, height);
+//    out.drawImage(buffer, 0,0);
+    out.putImageData(image, 0, 0, 0, 0, width, height);
+ //   out.restore();
+
+    output.style.left = base.x + "px";
+    output.style.top = base.y + "px";
+  }
+
+  output.onmouseover = function(e){
+    if (! dragging) {
+      output.className = "hover";
+    }
+  }
+  output.onmouseout = function(e) {
+    if (dragging != base) {
+      output.className = "";
+    }
+  }
+  output.onmousedown = function(e){
+    x = base.x;
+    y = base.y;
+    startX = e.pageX;
+    startY = e.pageY;
+    dragging = base;
+    output.style.zIndex = ++zIndex;
+  }
+
+  base.setXY = function(newx, newy) {
+    base.x = clamp(newx, 0, $(window).width() - width);
+    base.y = clamp(newy, 0, $(window).height() - height);
+    output.style.left = base.x + "px";
+    output.style.top = base.y + "px";
+    if (audioEnabled && audioReady) {
+      var panX = ((newx + width/2) / window.innerWidth) * 2.0 - 1.0;
+      var panY = ((newy + height/2) / window.innerHeight) * 2.0 - 1.0;
+      panner.setPosition(panX * 2, 2.0, 1);
+    }
+  }
+}
+
+//////////////////////////////////////////////////////////////////
+// LOADING THE VIDEOS
+
+var startTime = 0;
+function start(){
+  var ready = 0;
+  for (var i = 0; i < players.length; i++) {
+    if (players[i].ready) ready++;
+  }
+  if (mainAudio.ready) ready++;
+  if (ready != players.length + 1) {
+    console.log('not ready yet');
+    return;
+  }
+  console.log("ready!");
+  for (var i = 0; i < players.length; i++) {
+    players[i].start();
+  }
+  startTime = Date.now();
+  mainAudio.start();
+  loop(startTime);
+}
+
+//////////////////////////////////////////////////////////////////
+// ANIMATION LOOP SETS THEIR POSITIONS
+
+function loop(){
+	var t = Date.now();
+  requestAnimFrame(loop);
+  stats.begin();
+	var position = (t - startTime) / 1000;
+  for (var i = 0; i < players.length; i++) {
+    players[i].loop(position);
+  }
+  document.getElementById("position").innerHTML = position;
+  stats.end();
+}
+
+///////////////////////////////////////////////////////////////
+// DRAGGING THE VIDEOS
+
+var startX = 0;
+var startY = 0;
+var x = 0;
+var y = 0;
+var dragging = false;
+window.onmousemove = function(e){
+  if (dragging) {
+    var newX = x + e.pageX - startX;
+    var newY = y + e.pageY - startY;
+    dragging.setXY(newX, newY);
+  }
+}
+window.onmouseup = function(){
+  if (dragging) {
+    dragging.output.className = "";
+    dragging = false;
+  }
+}
+
+function rand(x) { return Math.floor(Math.random() * x); }
+function clamp(x,a,b) { return Math.min(Math.max(x,a),b); }
+
+</script>
+</html>
+
