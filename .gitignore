@@ -10,9 +10,6 @@ tmp/
 *#
 *.swp
 public/sounds/
-public/assets/sounds/
-public/assets/videos/
-public/assets/videos-large/
 *.mp4
 *.mp3
 *.ogg
