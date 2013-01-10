@@ -18,10 +18,12 @@ canvas {
 }
 
 body {
+	-webkit-transform: translateZ(0);
+}
+body.checker {
 	background-color: white;
 	background-image: url(/assets/images/checker2.png);
 	background-size: auto;
-	-webkit-transform: translateZ(0);
 	background-position: center center;
 }
 body.invert {
@@ -38,6 +40,11 @@ body.milkyway {
 	background-image: url(/assets/images/milkyway.gif);
 	background-size: contain;
 	background-position: center center;
+}
+body.brooklynbridge {
+	background-image: url(/assets/images/brooklynbridge.jpg);
+	background-size: cover;
+	background-position: bottom center;
 }
 
 canvas {

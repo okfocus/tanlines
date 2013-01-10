@@ -1,19 +1,12 @@
 var positions = {
-	'piano':             [ 0.15, 0.30 ],
-	'floortom':          [ 0.69, 0.40 ],
-	'synth':          	 [ 0.93, 0.31 ],
-	'keyboard-with-amp': [ 0.30, 0.40 ],
-	'drums-guitar':      [ 0.50, 0.45 ],
-	'guitar-voice':      [ 0.60, 0.11 ],
-	'microkorg':         [ 0.40, 0.15 ],
-	'strings':           [ 0.81, 0.35 ]
-/*
-	drum:    [],
-	guitars: [],
-	synths:  [],
-	drums:   [],
-	strings: [],
-*/
+	'piano':             [ 0.15, 0.21 ],
+	'floortom':          [ 0.69, 0.36 ],
+	'synth':          	 [ 0.93, 0.22 ],
+	'keyboard-with-amp': [ 0.30, 0.31 ],
+	'drums-guitar':      [ 0.50, 0.36 ],
+	'guitar-voice':      [ 0.60, 0.02 ],
+	'microkorg':         [ 0.40, 0.06 ],
+	'strings':           [ 0.81, 0.26 ]
 };
 
 var thresholds = {
@@ -54,10 +47,9 @@ var timing = {
 	],
 	'strings': [
 		// they are playing here
-//		[ 127.274, 134.00]
+		// [127.274, 134.00]
 		// this is the duration of the main section
 		[ 71.642,  248.00]
-
 	]
 };
 
@@ -71,3 +63,10 @@ var instruments = [
 	new Instrument('guitars', [ 'guitar-voice' ]),
 	new Instrument('strings', [ 'strings' ]),
 ];
+
+var bg = new Background ([
+	"milkyway",
+	"beach",
+	"brooklynbridge",
+	"checker"
+], "checker");
