@@ -1,3 +1,4 @@
+// Initial positions of the guys (percentages: [ left, bottom ])
 var positions = {
 	'piano':             [ 0.15, 0.21 ],
 	'floortom':          [ 0.69, 0.36 ],
@@ -9,6 +10,7 @@ var positions = {
 	'strings':           [ 0.81, 0.26 ]
 };
 
+// Max threshold used to key-out color
 var thresholds = {
 	'piano': 196,
 	'floortom': 202,
@@ -20,6 +22,7 @@ var thresholds = {
 	'synth': 200,
 }
 
+// Timeline for each video, when it fades in and out
 var timing = {
 	'piano': [
 		[  0.0,  280.00]	
@@ -53,8 +56,10 @@ var timing = {
 	]
 };
 
+// Make a new master sync object
 var master = new Master ();
 
+// Initialize the instruments: an audio stem, and a list of corresponding videos
 var instruments = [
 	new Instrument('vocals',  [ ]),
 	new Instrument('piano',   [ 'piano' ]),
@@ -64,9 +69,20 @@ var instruments = [
 	new Instrument('strings', [ 'strings' ]),
 ];
 
+// Initialize the background toggles
 var bg = new Background ([
 	"milkyway",
 	"beach",
 	"brooklynbridge",
+	"badlands",
 	"checker"
 ], "checker");
+
+// Initialize the stats object
+var stats = new Stats();
+stats.setMode( 0 );
+document.body.appendChild( stats.domElement );
+
+// At this point, the videos will be loading.
+// Once they're ready, playback will start automatically.
+

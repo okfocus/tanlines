@@ -1,101 +1,117 @@
 
+// The VideoPlayer coordinates playback of an individual video to a canvas,
+// keying out white, mouse events, etc..
 function VideoPlayer(instrument, src) {
   var base = this;
   base.src = src;
+  
+  // HTML5 video object. Not displayed.
   var video = document.createElement("video");
   var source = document.createElement("source");
 
+	// Buffer canvas, write the video to this first. Not displayed.
   var buffer = document.createElement("canvas");
   var buf = buffer.getContext('2d');
 
+	// Output canvas, write to this post-processing. Displayed.
   var output = document.createElement("canvas");
   var out = output.getContext('2d');
+  output.style.position = "absolute";
+  base.output = output;
+  base.$output = $(output);
 	
-  var width, height;
-	
-	var times = timing[src];
-	console.log(times);
+	// Fetch timeline data
+	var times = src in timing ? timing[src] : timing['piano'];
 	var timeIndex = 0;
 	
-	base.auto = true;
-	
+	// Fetch key-out threshold of this video
 	var max_thresh = src in thresholds ? thresholds[src] : 190;
 	var opacity = 0;
 	var destOpacity = 0;
 	
-  var videoFileUrl = "/assets/videos/" + src + ".mp4";
-	
-	base.x = rand(window.innerWidth * 3/4);
-	base.y = rand(window.innerHeight * 3/4);
+	// Should this video be active..?
+	var active = false;
 
-  output.style.position = "absolute";
-  base.output = output;
+	// Is the mouse hovering over this video?
+	base.hovering = false;
+
+	// URL to the video
+  var videoFileUrl = "/assets/videos/" + src + "." + VIDEO_EXTENSION;
 	
+	// Geometry data
+  var width, height;
 	base.width = 0;
 	base.height = 0;
+	base.x = rand(window.innerWidth * 3/4);
+	base.y = rand(window.innerHeight * 3/4);
+	base.m = {};
 	
   init();
-	
+
+	// Private: Build the video object
   function init() {
     source.src = videoFileUrl;
-    source.type = 'video/mp4; codecs="avc1.42E01E"';
+    source.type = VIDEO_MIME;
     video.addEventListener('loadedmetadata', loaded, false);
     video.addEventListener('ended', base.seekToBeginning, false);
     video.appendChild(source);
 		master.add();
   }
+  
+  // Private: When the video has loaded..
   function loaded () {
     buffer.width = video.videoWidth;
     buffer.height = video.videoHeight;
+
     base.width = width = video.videoWidth;
     base.height = height = video.videoHeight;
+
     output.width = width - 4;
     output.height = height - 4;
-    video.currentTime = Math.random() * video.duration;
-    video.play();
+
     output.style.width = base.width + "px";
     output.style.height = base.height + "px";
-    base.setXY(base.x, base.y);
-		document.body.appendChild(output);
 
+		// Position the video based on a percentage
 		if (src in positions) {
 			base.x = Math.floor( positions[src][0] * window.innerWidth - width/2 );
 			base.y = Math.floor( positions[src][1] * window.innerHeight );
-			console.log(src, base.x, base.y);
-			base.setXY(base.x, base.y);
 		}
+
+    base.setXY(base.x, base.y);
+		base.makeMarquee();
+		
+		document.body.appendChild(output);
 
   	console.log("video " + src + " ready ", width, height);
 		master.loaded();
   }
   
+	// Public: Show a video
 	base.show = function(){
 		output.style.display = "block";
 		destOpacity = 1.0;
 	}
+	// Private: Hide a video. Does not change display type because it will do a fade.
 	base.hide = function(){
 		destOpacity = 0.0;
 	}
-   
-  base.start = function (time) {
-    base.seekToBeginning();
-  }
 
+	// Public: Rewind and start playing a video
   this.seekToBeginning = function () {
     video.pause();
     video.currentTime = 0;
     video.play();
 	}
+	
+	// Public: Just rewind the video and pause
   this.seekToBeginningAndPause = function () {
     video.pause();
     video.currentTime = 0;
   }
 
-	var active = false;
-	base.hovering = false;
-
-  this.loop = function(t){
-
+	// Private: Check if the video should be displayed at this time
+	function advanceTimeline(t){
 		if (instrument.auto) {
 			if (! active) {
 				// if this segment has started
@@ -115,63 +131,63 @@ function VideoPlayer(instrument, src) {
 				}
 			}
 		}
+	}
+
+	// Public: Animation loop, called each frame.
+  this.loop = function(t){
+
+		// Check if this video is turning off or on.
+		advanceTimeline(t);
 		if (opacity == 0 && destOpacity == 0) return;
 
-    buf.drawImage(video, 0, 0);
-    
-    var image = buf.getImageData(0, 0, width, height),
-      imageData = image.data;
-    if (imageData[0] === 0) return;
-
+		// Fade the threshold one step, if necessary
 		if (opacity != destOpacity) {
 			opacity = weightAverage(opacity, destOpacity, 10);
-			
+
 			if (destOpacity == 0 && opacity == 0) {
 				output.style.display = "none";
 				return;
 			}
 		}
 
+		// Draw the video to the buffer.
+    buf.drawImage(video, 0, 0);
+    
+    // Fetch the pixel data;
+    var image = buf.getImageData(0, 0, width, height);
+    var imageData = image.data;
+    
+    // Don't show anything if the video is black.
+    if (imageData[0] === 0) return;
+
+		// Get the current key-out threshold, based on the slider, the fade, and the video.
 		var thresh = THRESHOLD * opacity * max_thresh;
 
+		// Perform the alpha transparency key-out
     if (INVERT) {
     	invert(imageData, thresh);
 		} else {
 			alpha(imageData, thresh);
 		}
 
+		// If we're hovering, draw a moving dashed selection rectangle.
     if (base.hovering) {
     	drawAnts(imageData, width, height, t);
     }
 
+		// Draw the transparent image to a canvas and we're done.
+		// Commented-out functions were used when painting to a single master canvas.
+
 		// out.save();
 		// buf.putImageData(image, 0, 0, 0, 0, width, height);
 		// out.drawImage(buffer, 0,0);
+
     out.putImageData(image, 0, 0, 0, 0, width, height);
+
 		// out.restore();
-
-    output.style.left = base.x + "px";
-    output.style.bottom = base.y + "px";
   }
 
-  output.onmouseover = function(e){
-    if (! dragging) {
-      base.hovering = true;
-    }
-  }
-  output.onmouseout = function(e) {
-    if (dragging != base) {
-      base.hovering = false;
-    }
-  }
-  output.onmousedown = function(e){
-    x = base.x;
-    y = base.y;
-    startX = e.pageX;
-    startY = e.pageY;
-    dragging = base;
-  }
-
+	// Public: Move the canvas to a specific position.
   base.setXY = function(newx, newy) {
     base.x = clamp(newx, 0, window.innerWidth - width);
     base.y = clamp(newy, 0, window.innerHeight - height);
@@ -179,26 +195,141 @@ function VideoPlayer(instrument, src) {
     output.style.bottom = base.y + "px";
     output.style.zIndex = window.innerHeight - base.y;
   }
+
+	// Public: Generate a marquee object, suitable for being passed to $.css
+	base.makeMarquee = function () {
+		base.m = {
+			bottom: base.y,
+			left: base.x,
+			width: base.width,
+			height: base.height
+		};
+	}
+
+	// When we start hovering over a video..
+  output.onmouseover = function(e){
+    if (! dragging) {
+      base.hovering = true;
+    }
+  }
+  
+	// When we stop hovering over a video..
+  output.onmouseout = function(e) {
+    if (dragging != base) {
+      base.hovering = false;
+    }
+  }
+  
+  // When we click on a video..
+  output.onmousedown = function(e){
+    x = base.x;
+    y = base.y;
+    startX = e.pageX;
+    startY = e.pageY;
+    dragging = base;
+
+		base.makeMarquee();
+		
+		// Are we resizing, or just dragging?
+		resizing = nearEdgeOfSelection(e, base.m);
+
+		console.log(edgeEnum[resizing]);
+		if (resizing) {
+			resizeMarquee = $.extend({}, base.m);
+		}
+  }
 }
 
+// Globals involved in dragging/resizing
 var startX = 0;
 var startY = 0;
 var x = 0;
 var y = 0;
 var dragging = false;
+var resizing = false;
+var resizeMarquee = {};
+
+// While we're dragging/resizing..
+// The mouse move/up functions are global because otherwise you lose focus easily.
 window.onmousemove = function(e){
   if (dragging) {
-    var newX = x + e.pageX - startX;
-    var newY = y + startY - e.pageY;
-    dragging.setXY(newX, newY);
+  	if (resizing) {
+			var dy = e.pageY - startY;
+			var dx = e.pageX - startX;
+			var m = resizeMarquee;
+			var klass = "";
+
+			switch (resizing) {
+				case TOP:
+				case TOP_LEFT:
+				case TOP_RIGHT:
+					// m.height = clamp(dragging.m.height - dy, 10, window.innerHeight);
+					m.height = dragging.m.height - dy;
+					break;
+				case BOTTOM:
+				case BOTTOM_LEFT:
+				case BOTTOM_RIGHT:
+					// m.bottom = clamp(dragging.m.bottom - dy, dragging.m.bottom - dy, dragging.m.bottom + dragging.m.height - 10);
+					// m.height = clamp(dragging.m.height + dy, 10, window.innerHeight);
+					m.bottom = dragging.m.bottom - dy;
+					m.height = dragging.m.height + dy;
+					break;
+			}
+			switch (resizing) {
+				case LEFT:
+				case TOP_LEFT:
+				case BOTTOM_LEFT:
+					// m.left = clamp(dragging.m.left + dx, dragging.m.left + dx, dragging.m.left + dragging.m.width - 10);
+					// m.width = clamp(dragging.m.width - dx, 10, window.innerWidth);
+					m.left = dragging.m.left + dx;
+					m.width = dragging.m.width - dx;
+					break;
+				case RIGHT:
+				case TOP_RIGHT:
+				case BOTTOM_RIGHT:
+					// m.width = clamp(dragging.m.width + dx, 10, window.innerWidth);
+					m.width = dragging.m.width + dx;
+					break;
+			}
+			
+			if (m.width < 0) {
+				m.left += m.width;
+				m.width = Math.abs(m.width);
+				klass = "flip";
+			}
+			if (m.height < 0) {
+				m.bottom += m.height;
+				m.height = Math.abs(m.height);
+				if (klass) {
+					klass = "flip flop";
+				} else {
+					klass = "flop";
+				}
+			}
+			dragging.output.className = klass;
+			dragging.$output.css(m);
+  	}
+  	else {
+			var newX = x + e.pageX - startX;
+			var newY = y + startY - e.pageY;
+			dragging.setXY(newX, newY);
+		}
   }
 }
+
+// When we're done dragging..
 window.onmouseup = function(){
   if (dragging) {
-    dragging.output.className = "";
+  	if (resizing) {
+  		dragging.m = resizeMarquee;
+//  		dragging.setXY(resizeMarquee.x, resizeMarquee.y);
+  	}
     dragging = false;
+    resizing = false;
   }
 }
+
+// When we resize the window, reposition the videos proportionally.
 var oldWidth = window.innerWidth;
 var oldHeight = window.innerHeight;
 window.onresize = function(){
