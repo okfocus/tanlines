@@ -40,11 +40,13 @@ function VideoPlayer(instrument, src) {
 	
 	// Geometry data
   var width, height;
+	base.m = {};
 	base.width = 0;
 	base.height = 0;
 	base.x = rand(window.innerWidth * 3/4);
 	base.y = rand(window.innerHeight * 3/4);
-	base.m = {};
+	base.flip = false;
+	base.flop = false;
 	
   init();
 
@@ -231,10 +233,20 @@ function VideoPlayer(instrument, src) {
 		base.makeMarquee();
 		
 		// Are we resizing, or just dragging?
-		resizing = nearEdgeOfSelection(e, base.m);
+		resizing = nearEdgeOfSelection(e, base.m, dragging.flip, dragging.flop);
 
 		console.log(edgeEnum[resizing]);
 		if (resizing) {
+			currentlyFlipped = base.flip;
+			currentlyFlopped = base.flop;
+			if (currentlyFlipped) {
+				base.m.left = base.m.left + base.m.width;
+				base.m.width = - base.m.width;
+			}
+			if (currentlyFlopped) {
+				base.m.bottom = base.m.bottom + base.m.height;
+				base.m.height = - base.m.height;
+			}
 			resizeMarquee = $.extend({}, base.m);
 		}
   }
@@ -247,6 +259,8 @@ var x = 0;
 var y = 0;
 var dragging = false;
 var resizing = false;
+var currentlyFlipped = false;
+var currentlyFlopped = false;
 var resizeMarquee = {};
 
 // While we're dragging/resizing..
@@ -258,6 +272,9 @@ window.onmousemove = function(e){
 			var dx = e.pageX - startX;
 			var m = resizeMarquee;
 			var klass = "";
+			
+			if (currentlyFlopped) dy = - dy;
+			if (currentlyFlipped) dx = - dx;
 
 			switch (resizing) {
 				case TOP:
@@ -292,20 +309,23 @@ window.onmousemove = function(e){
 					break;
 			}
 			
+			dragging.flip = m.width < 0;
+			dragging.flop = m.height < 0;
 			if (m.width < 0) {
-				m.left += m.width;
 				m.width = Math.abs(m.width);
+				m.left = dragging.m.left + dx - m.width;
 				klass = "flip";
 			}
 			if (m.height < 0) {
-				m.bottom += m.height;
 				m.height = Math.abs(m.height);
+				m.bottom = dragging.m.bottom - dy + m.height;
 				if (klass) {
 					klass = "flip flop";
 				} else {
 					klass = "flop";
 				}
 			}
+			
 			dragging.output.className = klass;
 			dragging.$output.css(m);
   	}
@@ -322,7 +342,9 @@ window.onmouseup = function(){
   if (dragging) {
   	if (resizing) {
   		dragging.m = resizeMarquee;
-//  		dragging.setXY(resizeMarquee.x, resizeMarquee.y);
+  		dragging.width = resizeMarquee.width;
+  		dragging.height = resizeMarquee.height;
+  		dragging.setXY(resizeMarquee.left, resizeMarquee.bottom);
   	}
     dragging = false;
     resizing = false;
