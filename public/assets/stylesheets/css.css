@@ -46,6 +46,11 @@ body.brooklynbridge {
 	background-size: cover;
 	background-position: bottom center;
 }
+body.badlands {
+	background-image: url(/assets/images/badlands.jpg);
+	background-size: cover;
+	background-position: center center;
+}
 
 canvas {
 	cursor: pointer;
