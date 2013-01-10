@@ -60,21 +60,40 @@ TOP_LEFT = 8;
 var edgeEnum = "NONE TOP TOP_RIGHT RIGHT BOTTOM_RIGHT BOTTOM BOTTOM_LEFT LEFT TOP_LEFT".split(" ");
 
 // Detect if the mouse event (e) is close to the edge of an object on hover
-function nearEdgeOfSelection (e, m) {
+function nearEdgeOfSelection (e, m, flip, flop) {
 	var shim = 20,
 	x = e.pageX,
 	y = e.pageY,
-	bottom = window.innerHeight - m.bottom,
+	bottom = window.innerHeight - m.bottom;
+	var top_lower, top_upper, bottom_lower, bottom_upper,
+	left_lower, left_upper, right_lower, right_upper;
 	
 	// bounds checking
-	top_lower    = bottom - m.height - shim < y,
-	top_upper    = y < bottom - m.height + shim,
-	bottom_lower = bottom - shim < y,
-	bottom_upper = y < bottom + shim,
-	left_lower   = m.left - shim < x,
-	left_upper   = x < m.left + shim,
-	right_lower  = m.left + m.width - shim < x,
-	right_upper  = x < m.left + m.width + shim;
+	if (flop) {
+		top_lower    = bottom - shim < y,
+		top_upper    = y < bottom + shim,
+		bottom_lower = bottom - m.height - shim < y,
+		bottom_upper = y < bottom - m.height + shim;
+	}
+	else {
+		top_lower    = bottom - m.height - shim < y,
+		top_upper    = y < bottom - m.height + shim,
+		bottom_lower = bottom - shim < y,
+		bottom_upper = y < bottom + shim;
+	}
+
+	if (flip) {
+		left_lower   = m.left + m.width - shim < x,
+		left_upper   = x < m.left + m.width + shim,
+		right_lower  = m.left - shim < x,
+		right_upper  = x < m.left + shim;
+	}
+	else {
+		left_lower   = m.left - shim < x,
+		left_upper   = x < m.left + shim,
+		right_lower  = m.left + m.width - shim < x,
+		right_upper  = x < m.left + m.width + shim;
+	}
 	
 	if (top_upper && top_lower) {
 		if (left_upper && left_lower) {

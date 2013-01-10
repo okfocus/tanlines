@@ -233,7 +233,7 @@ function VideoPlayer(instrument, src) {
 		base.makeMarquee();
 		
 		// Are we resizing, or just dragging?
-		resizing = nearEdgeOfSelection(e, base.m, dragging.flip, dragging.flop);
+		resizing = nearEdgeOfSelection(e, base.m, base.flip, base.flop);
 
 		console.log(edgeEnum[resizing]);
 		if (resizing) {
