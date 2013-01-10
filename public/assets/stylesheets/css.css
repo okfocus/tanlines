@@ -355,6 +355,7 @@ p {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	margin: 30px;
+	float:right;
 	background: #d6d6d6 url(https://s3.amazonaws.com/luckyplop/f7ba02119491984908e0d3c56d1372885663b5d7.png)no-repeat 0 -478px;
 	border: 1px solid #333;
 	-webkit-border-top-left-radius: 4px;
@@ -434,103 +435,6 @@ p {
 	height: 10px;
 	display: inline-block;
 	padding-bottom: 8px;
-}
-
-
-.sprite-color_picker {
-	background-position: 0 0;
-	width: 31px;
-	height: 13px;
-}
-.sprite-drum {
-	background-position: 0 -63px;
-	width: 20px;
-	height: 20px;
-}
-.sprite-drum_active {
-	background-position: 0 -133px;
-	width: 20px;
-	height: 20px;
-}
-.sprite-eye {
-	background-position: 0 -203px;
-	width: 14px;
-	height: 14px;
-}
-.sprite-guitar {
-	background-position: 0 -267px;
-	width: 20px;
-	height: 20px;
-}
-.sprite-guitar_active {
-	background-position: 0 -337px;
-	width: 20px;
-	height: 20px;
-}
-.sprite-layers_bottom {
-	background-position: 0 -407px;
-	width: 213px;
-	height: 21px;
-}
-.sprite-layers_top {
-	background-position: 0 -478px;
-	width: 214px;
-	height: 30px;
-}
-.sprite-mic {
-	background-position: 0 -558px;
-	width: 20px;
-	height: 20px;
-}
-.sprite-mic_active {
-	background-position: 0 -628px;
-	width: 20px;
-	height: 20px;
-}
-.sprite-paino_active {
-	background-position: 0 -698px;
-	width: 20px;
-	height: 20px;
-}
-.sprite-piano {
-	background-position: 0 -768px;
-	width: 20px;
-	height: 20px;
-}
-.sprite-piano2 {
-	background-position: 0 -838px;
-	width: 20px;
-	height: 20px;
-}
-.sprite-piano2_active {
-	background-position: 0 -908px;
-	width: 20px;
-	height: 20px;
-}
-.sprite-synth {
-	background-position: 0 -978px;
-	width: 20px;
-	height: 20px;
-}
-.sprite-synth_active {
-	background-position: 0 -1048px;
-	width: 20px;
-	height: 20px;
-}
-.sprite-toolbar_top {
-	background-position: 0 -1118px;
-	width: 35px;
-	height: 19px;
-}
-.sprite-violin {
-	background-position: 0 -1187px;
-	width: 20px;
-	height: 20px;
-}
-.sprite-violin_active {
-	background-position: 0 -1257px;
-	width: 20px;
-	height: 20px;
 }
 
 .flip {
