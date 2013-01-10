@@ -18,6 +18,7 @@ function VideoPlayer(instrument, src) {
   var out = output.getContext('2d');
   output.style.position = "absolute";
   base.output = output;
+  base.$output = $(output);
 	
 	// Fetch timeline data
 	var times = src in timing ? timing[src] : timing['piano'];
@@ -231,6 +232,8 @@ function VideoPlayer(instrument, src) {
 		
 		// Are we resizing, or just dragging?
 		resizing = nearEdgeOfSelection(e, base.m);
+
+		console.log(edgeEnum[resizing]);
 		if (resizing) {
 			resizeMarquee = $.extend({}, base.m);
 		}
@@ -254,34 +257,56 @@ window.onmousemove = function(e){
 			var dy = e.pageY - startY;
 			var dx = e.pageX - startX;
 			var m = resizeMarquee;
+			var klass = "";
 
 			switch (resizing) {
 				case TOP:
 				case TOP_LEFT:
 				case TOP_RIGHT:
-					m.height = clamp(dragging.m.height + dy, 10, window.innerHeight);
+					// m.height = clamp(dragging.m.height - dy, 10, window.innerHeight);
+					m.height = dragging.m.height - dy;
 					break;
 				case BOTTOM:
 				case BOTTOM_LEFT:
 				case BOTTOM_RIGHT:
-					m.bottom = clamp(dragging.m.bottom + dy, dragging.m.bottom + dy, dragging.m.bottom + dragging.m.height - 10);
-					m.height = clamp(dragging.m.height - dy, 10, window.innerHeight);
+					// m.bottom = clamp(dragging.m.bottom - dy, dragging.m.bottom - dy, dragging.m.bottom + dragging.m.height - 10);
+					// m.height = clamp(dragging.m.height + dy, 10, window.innerHeight);
+					m.bottom = dragging.m.bottom - dy;
+					m.height = dragging.m.height + dy;
 					break;
 			}
 			switch (resizing) {
 				case LEFT:
 				case TOP_LEFT:
 				case BOTTOM_LEFT:
-					m.left = clamp(dragging.m.left + dx, dragging.m.left + dx, dragging.m.left + dragging.m.width - 10);
-					m.width = clamp(dragging.m.width - dx, 10, window.innerWidth);
+					// m.left = clamp(dragging.m.left + dx, dragging.m.left + dx, dragging.m.left + dragging.m.width - 10);
+					// m.width = clamp(dragging.m.width - dx, 10, window.innerWidth);
+					m.left = dragging.m.left + dx;
+					m.width = dragging.m.width - dx;
 					break;
 				case RIGHT:
 				case TOP_RIGHT:
 				case BOTTOM_RIGHT:
-					m.width = clamp(dragging.m.width + dx, 10, window.innerWidth);
+					// m.width = clamp(dragging.m.width + dx, 10, window.innerWidth);
+					m.width = dragging.m.width + dx;
 					break;
 			}
 			
+			if (m.width < 0) {
+				m.left += m.width;
+				m.width = Math.abs(m.width);
+				klass = "flip";
+			}
+			if (m.height < 0) {
+				m.bottom += m.height;
+				m.height = Math.abs(m.height);
+				if (klass) {
+					klass = "flip flop";
+				} else {
+					klass = "flop";
+				}
+			}
+			dragging.output.className = klass;
 			dragging.$output.css(m);
   	}
   	else {
@@ -295,7 +320,12 @@ window.onmousemove = function(e){
 // When we're done dragging..
 window.onmouseup = function(){
   if (dragging) {
+  	if (resizing) {
+  		dragging.m = resizeMarquee;
+//  		dragging.setXY(resizeMarquee.x, resizeMarquee.y);
+  	}
     dragging = false;
+    resizing = false;
   }
 }
 

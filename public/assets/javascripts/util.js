@@ -57,23 +57,25 @@ BOTTOM = 5,
 BOTTOM_LEFT = 6;
 LEFT = 7,
 TOP_LEFT = 8;
+var edgeEnum = "NONE TOP TOP_RIGHT RIGHT BOTTOM_RIGHT BOTTOM BOTTOM_LEFT LEFT TOP_LEFT".split(" ");
 
 // Detect if the mouse event (e) is close to the edge of an object on hover
 function nearEdgeOfSelection (e, m) {
-	var shim = 10,
+	var shim = 20,
 	x = e.pageX,
 	y = e.pageY,
+	bottom = window.innerHeight - m.bottom,
 	
 	// bounds checking
-	top_lower    = m.top - shim < y,
-	top_upper    = y < m.top + shim,
-	bottom_lower = m.top + m.height - shim < y,
-	bottom_upper = y < m.top + m.height + shim,
+	top_lower    = bottom - m.height - shim < y,
+	top_upper    = y < bottom - m.height + shim,
+	bottom_lower = bottom - shim < y,
+	bottom_upper = y < bottom + shim,
 	left_lower   = m.left - shim < x,
 	left_upper   = x < m.left + shim,
 	right_lower  = m.left + m.width - shim < x,
 	right_upper  = x < m.left + m.width + shim;
-
+	
 	if (top_upper && top_lower) {
 		if (left_upper && left_lower) {
 			return TOP_LEFT;
@@ -97,5 +99,5 @@ function nearEdgeOfSelection (e, m) {
 			return RIGHT;
 		}
 	}
-	return false;
+	return 0;
 }
