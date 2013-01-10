@@ -29,6 +29,10 @@ body.invert {
 	background-image: url(/assets/images/checker-black.png);
 	background-size: auto;
 }
+body.beach {
+	background-image: url(/assets/images/beach.gif);
+	background-size: cover;
+}
 
 canvas {
 	cursor: pointer;
