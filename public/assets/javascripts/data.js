@@ -1,11 +1,12 @@
 var positions = {
 	'piano':             [ 0.15, 0.30 ],
-	'floortom':          [ 0.72, 0.40 ],
+	'floortom':          [ 0.68, 0.40 ],
+	'synth':          	 [ 0.93, 0.31 ],
 	'keyboard-with-amp': [ 0.30, 0.40 ],
 	'drums-guitar':      [ 0.50, 0.45 ],
 	'guitar-voice':      [ 0.60, 0.11 ],
 	'microkorg':         [ 0.40, 0.15 ],
-	'strings':           [ 0.85, 0.32 ]
+	'strings':           [ 0.82, 0.35 ]
 /*
 	drum:    [],
 	guitars: [],
@@ -23,6 +24,7 @@ var thresholds = {
 	'keyboard-with-amp': 200,
 	'drums-guitar': 187,
 	'strings': 173,
+	'synth': 200,
 }
 
 var timing = {
@@ -41,6 +43,9 @@ var timing = {
 		[ 71.642,  248.00]
 	],
 	'keyboard-with-amp': [
+		[ 71.642,  248.00]
+	],
+	'synth': [
 		[ 71.642,  248.00]
 	],
 	'drums-guitar': [
@@ -62,7 +67,7 @@ var instruments = [
 	new Instrument('piano',   [ 'piano' ]),
 	new Instrument('vocals',  [ ]),
 	new Instrument('drums',   [ 'drums-guitar', 'floortom' ]),
-	new Instrument('synths',  [ 'microkorg', 'keyboard-with-amp' ]),
+	new Instrument('synths',  [ 'microkorg', 'keyboard-with-amp', 'synth' ]),
 	new Instrument('guitars', [ 'guitar-voice' ]),
 	new Instrument('strings', [ 'strings' ]),
 ];

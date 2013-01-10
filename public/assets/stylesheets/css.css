@@ -21,8 +21,8 @@ body {
 	background-color: white;
 	background-image: url(/assets/images/checker2.png);
 	background-size: auto;
-	background-image:url(/assets/images/checker.png);
 	-webkit-transform: translateZ(0);
+	background-position: center center;
 }
 body.invert {
 	background-color: black;
@@ -32,6 +32,12 @@ body.invert {
 body.beach {
 	background-image: url(/assets/images/beach.gif);
 	background-size: cover;
+	background-position: center center;
+}
+body.milkyway {
+	background-image: url(/assets/images/milkyway.gif);
+	background-size: contain;
+	background-position: center center;
 }
 
 canvas {
