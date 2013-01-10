@@ -1,4 +1,5 @@
 
+// Invert pixels w/ alpha channel threshold
 function invert (imageData, thresh) {
 	for (var i = 0, len = imageData.length; i < len; i = i + 4) {
 		imageData[i+3] = imageData[i] >= thresh ? 0 : 255;
@@ -8,12 +9,16 @@ function invert (imageData, thresh) {
 	}
 }
 
+// Key out white by adding a hard alpha channel threshold.
+// Note that this detects alpha data based on the green video channel.
+// Red didn't work, since the actors are caucasian.  Blue didn't really work either.
 function alpha (imageData, thresh) {
 	for (var i = 3, len = imageData.length; i < len; i = i + 4) {
 		imageData[i] = imageData[i-2] >= thresh ? 0 : 255;
 	}
 }
 
+// Draw marching "selection" ants around the edge of a marquee.
 function drawAnts (imageData, width, height, t) {
 	var tt = Math.floor( t * 10 ) % 8;
 	var off = ((height - 5) * width) % 8;
