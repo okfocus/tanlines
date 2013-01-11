@@ -1,22 +1,27 @@
 
 function Toggle (instrument, key) {
 	var base = this;
-  var span = document.createElement("span");
-  document.getElementById("controls").appendChild(span);
+	var active = false;
 
-  base.checkbox = document.createElement("input");
-  base.checkbox.type = "checkbox";
-	base.checkbox.className = key;
-  base.checkbox.checked = false;
-  base.checkbox.onclick = function(){
-		if ( base.checkbox.checked ) {
+  base.$checkbox = $("#toolbar ul li." + key);
+  base.$checkbox.click(function(){
+		if (! active) {
 			instrument.show();
+			base.activate();
 		} else {
+			base.deactivate();
 			instrument.hide();
 		}
-	}
-
-	span.appendChild(base.checkbox);
+  });
+  
+  base.activate = function(){
+		active = true;
+		base.$checkbox.addClass("active");
+  }
+  base.deactivate = function(){
+			active = false;
+			base.$checkbox.removeClass("active");
+  }
 }
 
 

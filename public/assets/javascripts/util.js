@@ -1,23 +1,3 @@
-
-// Browser detection
-var VIDEO_EXTENSION, VIDEO_MIME, AUDIO_EXTENSION, AUDIO_MIME;
-
-if ($.browser.firefox) {
-	VIDEO_EXTENSION = "ogv";
-	VIDEO_MIME = 'video/ogg';
-	AUDIO_EXTENSION = "ogg";
-	AUDIO_MIME = 'audio/ogg';
-}
-else if ($.browser.webkit) {
-	VIDEO_EXTENSION = "mp4";
-	VIDEO_MIME = 'video/mp4; codecs="avc1.42E01E"';
-	AUDIO_EXTENSION = "mp3";
-	AUDIO_MIME = 'audio/mpeg';
-}
-else {
-	// can't play html5 video..
-}
-
 // PI requestAnimationFrame polyfill
 window.requestAnimFrame = (function(){
     return  window.requestAnimationFrame       || 
@@ -101,6 +81,7 @@ function nearEdgeOfSelection (e, m) {
 	}
 	return 0;
 }
+
 (function($) {
     $.fn.drags = function(opt) {
 

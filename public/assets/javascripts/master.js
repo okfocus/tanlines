@@ -1,11 +1,43 @@
+// Browser detection
+var VIDEO_EXTENSION, VIDEO_MIME, AUDIO_EXTENSION, AUDIO_MIME;
+var browserErrorMsg = 'Your browser doesn\'t support HTML5 video!<br>' +
+            'Please try <a href="http://www.google.com/chrome">Chrome</a> or ' +
+	          '<a href="http://www.getfirefox.org/">Firefox</a>';
+
 
 // Master sync object
 function Master() {
 	var base = this;
 	this.mediaCount = 0;
 	this.readyCount = 0;
+	this.error = false;
 	var startTime = 0;
 	var paused = false;
+
+	function init (){
+		checkBrowser();
+	}
+	function checkBrowser (){
+		if ($.browser.firefox) {
+			VIDEO_EXTENSION = "ogv";
+			VIDEO_MIME = 'video/ogg';
+			AUDIO_EXTENSION = "ogg";
+			AUDIO_MIME = 'audio/ogg';
+		}
+		else if ($.browser.webkit) {
+			VIDEO_EXTENSION = "mp4";
+			VIDEO_MIME = 'video/mp4; codecs="avc1.42E01E"';
+			AUDIO_EXTENSION = "mp3";
+			AUDIO_MIME = 'audio/mpeg';
+		}
+		else {
+			// can't play html5 video..
+			this.error = true;
+			$("#error").html(browserErrorMsg);
+			$("#error").show();
+			return;
+		}
+	}
 
 	// Public: A video tells the master it is being created
 	this.add = function(){
@@ -79,5 +111,6 @@ function Master() {
 		}
 		stats.end();
 	}
-
+	
+	init();
 }

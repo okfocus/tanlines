@@ -1,6 +1,8 @@
 
 // The AudioPlayer coordinates playback and muting of one of the stems.
 function AudioPlayer(instrument, src) {
+	if (master.error) return;
+
 	var base = this;
 	base.audio = document.createElement("audio");
   var source = document.createElement("source");

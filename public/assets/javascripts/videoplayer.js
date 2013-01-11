@@ -2,6 +2,7 @@
 // The VideoPlayer coordinates playback of an individual video to a canvas,
 // keying out white, mouse events, etc..
 function VideoPlayer(instrument, src) {
+	if (master.error) return;
   var base = this;
   base.src = src;
   
@@ -118,14 +119,14 @@ function VideoPlayer(instrument, src) {
 			if (! active) {
 				// if this segment has started
 				if (timeIndex >= 0 && times[timeIndex][0] < t) {
-					instrument.toggle.checkbox.checked = true;
+					instrument.toggle.activate();
 					base.show();
 					active = true;
 				}
 			}
 			else {
 				if (timeIndex >= 0 && times[timeIndex][1] < t) {
-					instrument.toggle.checkbox.checked = false;
+					instrument.toggle.deactivate();
 					base.hide();
 					timeIndex++;
 					if (timeIndex >= times.length) timeIndex = -1;
