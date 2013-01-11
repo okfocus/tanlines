@@ -12,7 +12,7 @@ html,body {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-	cursor:url(https://s3.amazonaws.com/luckyplop/5dd6756931025b49c19082d6e8c5c7347d51baf9.png), default;
+	/*cursor:url(https://s3.amazonaws.com/luckyplop/5dd6756931025b49c19082d6e8c5c7347d51baf9.png), default;*/
 }
 #buffer {
 	display: none;
@@ -89,6 +89,16 @@ header{
 
 header * {
 	margin:0;
+}
+
+#dumpfm {
+	border:0 solid;
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	display:none;
 }
 
 @-webkit-keyframes a {
@@ -423,6 +433,14 @@ cursor:url(https://s3.amazonaws.com/luckyplop/f06682dc0d64c7ad9784f7a40466aa293c
 	border-bottom: 1px solid #909090;
 	clear: both
 }
+#stats {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+}
+#layers ul li:last-child {
+	border-bottom: 0px solid;
+}
 #layers ul li:hover {
 	cursor:url(https://s3.amazonaws.com/luckyplop/f06682dc0d64c7ad9784f7a40466aa293ca1b66b.png), pointer;
 	background: #b5d5ff;
@@ -471,8 +489,10 @@ cursor:url(https://s3.amazonaws.com/luckyplop/f06682dc0d64c7ad9784f7a40466aa293c
 #layers img {
 	float: left;
 	border: 1px solid #333;
-	width: 40px;
-	margin: 5px
+	max-width: 40px;
+	margin: 5px;
+	max-height: 30px;
+	background: url(/assets/images/checker2.png);
 }
 #layers .bottom {
 	background: #d6d6d6 url(https://s3.amazonaws.com/luckyplop/f7ba02119491984908e0d3c56d1372885663b5d7.png)no-repeat 0 -407px;

@@ -72,3 +72,8 @@ function Background (bgz, def) {
 	}
 	document.body.className = "checker";
 }
+
+
+$('.dumptoggle').click(function() {
+    $("#dumpfm").toggle();
+});
