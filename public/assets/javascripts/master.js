@@ -59,8 +59,10 @@ function Master() {
 			return;
 		}
 		$("#loader").hide();
+		$("body").removeClass("preload");
 		console.log("ready!");
 		base.ready();
+		
 	}
 
 	this.ended = function(){
