@@ -357,6 +357,9 @@ window.onmouseup = function(){
   		dragging.flop = flop;
   		dragging.setXY(resizeMarquee.left, resizeMarquee.bottom);
   	}
+		for (var i = 0; i < videos.length; i++) {
+			videos[i].hovering = false;
+		}
     dragging = false;
     resizing = false;
   }
