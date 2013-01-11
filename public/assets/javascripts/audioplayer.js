@@ -14,7 +14,6 @@ function AudioPlayer(instrument, src) {
     source.type = AUDIO_MIME;
 
     base.audio.addEventListener('loadedmetadata', audioLoaded, false);
-    base.audio.addEventListener('ended', audioEnded, false);
     base.audio.appendChild(source);
 		master.add();
   }
@@ -23,11 +22,6 @@ function AudioPlayer(instrument, src) {
   function audioLoaded () {
   	console.log("audio " + src + " ready");
 		master.loaded();
-	}
-	
-	// Private: When enough tracks end, the song is over
-	function audioEnded () {
-		master.ended();
 	}
 	
 	// Public: Rewind the video

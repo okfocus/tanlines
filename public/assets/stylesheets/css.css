@@ -113,7 +113,10 @@ header * {
 	-moz-animation: b 0s!important; /* Firefox */
 	-webkit-animation: b 0s!important; /* Safari and Chrome */
 	-o-animation: b 0s!important;
-	 -webkit-filter: grayscale(0.5) blur(20px);
+  -webkit-filter: grayscale(0.5) blur(2px);
+}
+.preload #loader, .preload #loader * {
+  -webkit-filter: grayscale(0.5);
 }
 
 @-webkit-keyframes a {

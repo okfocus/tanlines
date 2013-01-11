@@ -70,7 +70,6 @@ function Background (bgz, def) {
 
 		$("#layers ul").append(toggle);
 	}
-	document.body.className = "checker";
 }
 
 

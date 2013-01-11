@@ -60,6 +60,7 @@ function Master() {
 		}
 		$("#loader").hide();
 		$("body").removeClass("preload");
+		$("body").addClass("checker");
 		console.log("ready!");
 		base.ready();
 		
