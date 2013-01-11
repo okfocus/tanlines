@@ -230,7 +230,7 @@ p {
 	padding-bottom: 15px;
 	padding-top: 20px;
 	box-shadow: 0 0 10px #eee;
-	z-index: 10000;
+	z-index: 10000 !important;
 }
 #toolbar ul {
 	list-style: none;
@@ -376,7 +376,7 @@ p {
 	padding-top: 20px;
 	height: 163px;
 	box-shadow: 0 0 10px #eee;
-	z-index: 10000;
+	z-index: 10000 !important;
 }
 #layers ul {
 	list-style: none;

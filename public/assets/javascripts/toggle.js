@@ -1,7 +1,7 @@
 
 function Toggle (instrument, key) {
 	var base = this;
-	var active = false;
+	var active = key == "vocals";
 
   base.$checkbox = $("#toolbar ul li." + key);
   base.$checkbox.click(function(){
@@ -22,6 +22,8 @@ function Toggle (instrument, key) {
 			active = false;
 			base.$checkbox.removeClass("active");
   }
+  
+  if (active) base.activate();
 }
 
 
