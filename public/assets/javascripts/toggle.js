@@ -33,10 +33,17 @@ document.getElementById("threshold").onchange = function(){
 
 var BG = "checker";
 var INVERT = false;
-document.getElementById("invert").onclick = function(){
-  INVERT = this.checked;
-  document.body.className = INVERT ? "invert" : BG;
-};
+$("#toolbar .color").click(function(){
+  INVERT = ! INVERT;
+  if (INVERT) {
+  	$("#toolbar .color").addClass("invert");
+		document.body.className = "invert";
+  }
+  else {
+  	$("#toolbar .color").removeClass("invert");
+		document.body.className = BG;
+  }
+});
 
 function Background (bgz, def) {
 	var br = document.createElement("br");

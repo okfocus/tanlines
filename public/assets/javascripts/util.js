@@ -40,6 +40,8 @@ TOP_LEFT = 8;
 var edgeEnum = "NONE TOP TOP_RIGHT RIGHT BOTTOM_RIGHT BOTTOM BOTTOM_LEFT LEFT TOP_LEFT".split(" ");
 
 // Detect if the mouse event (e) is close to the edge of an object on hover
+// The absolute positioning is done with bottom instead of top..
+// Using top positioning, it was easy to drag the guys offscreen, clamping didn't help.
 function nearEdgeOfSelection (e, m) {
 	var shim = 20,
 	x = e.pageX,
@@ -99,17 +101,16 @@ function nearEdgeOfSelection (e, m) {
             } else {
                 var $drag = $(this).addClass('active-handle').parent().addClass('draggable');
             }
-            var z_idx = $drag.css('z-index'),
-                drg_h = $drag.outerHeight(),
+            var drg_h = $drag.outerHeight(),
                 drg_w = $drag.outerWidth(),
                 pos_y = $drag.offset().top + drg_h - e.pageY,
                 pos_x = $drag.offset().left + drg_w - e.pageX;
-            $drag.css('z-index', 1000).parents().on("mousemove", function(e) {
+            $drag.parents().on("mousemove", function(e) {
                 $('.draggable').offset({
                     top:e.pageY + pos_y - drg_h,
                     left:e.pageX + pos_x - drg_w
                 }).on("mouseup", function() {
-                    $(this).removeClass('draggable').css('z-index', z_idx);
+                    $(this).removeClass('draggable');
                 });
             });
             e.preventDefault(); // disable selection

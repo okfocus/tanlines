@@ -30,6 +30,9 @@ body.invert {
 	background-color: black;
 	background-image: url(/assets/images/checker-black.png);
 	background-size: auto;
+	background-position: center center;
+}
+body.invert header {
 	color: white;
 }
 body.beach {
@@ -343,6 +346,14 @@ p {
 	margin-left: -15px;
 	margin-top: 10px;
 }
+
+#toolbar .color.invert span:nth-child(1) {
+	background: white;
+}
+#toolbar .color.invert span:nth-child(2) {
+	background: #222;
+}
+
 
 #layers {
 	width: 216px;
