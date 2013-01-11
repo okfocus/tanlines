@@ -1,7 +1,7 @@
 
 function Toggle (instrument, key) {
 	var base = this;
-	var active = false;
+	var active = key == "vocals";
 
   base.$checkbox = $("#toolbar ul li." + key);
   base.$checkbox.click(function(){
@@ -22,6 +22,8 @@ function Toggle (instrument, key) {
 			active = false;
 			base.$checkbox.removeClass("active");
   }
+  
+  if (active) base.activate();
 }
 
 
@@ -50,20 +52,22 @@ function Background (bgz, def) {
 		var bg = bgz[i];
 
 		var toggle = document.createElement("li");
-		toggle.innerHTML = '<span><input type="radio" name="bg"></span><img src="/assets/images/' + bg + '.jpg"><p>' + bg + '</p>';
+		toggle.innerHTML = '<span><input type="radio" name="bg"></span><img src="/assets/images/' + bg + '-small.jpg"><p>' + bg + '</p>';
 		toggle.setAttribute("value", bg);
 		toggle.onclick = function(){
-			document.body.className = BG = this.getAttribute("value");
 			$("#layers").find("li").removeClass("selected");
-			$(this).addClass("selected");
-			$(this).find("input").attr("checked","checked");
-		}
-
-		if (bgz[i] == def) {
-			$("li").find("input").attr("checked", "checked");
-			document.body.className = bgz[i];
+					$(this).addClass("selected");
+			var klass = this.getAttribute("value");
+			if (klass == BG) {
+				document.body.className = BG = "checker";
+				$(this).find("input").attr("checked", false);
+			} else {
+				document.body.className = BG = klass;
+				$(this).find("input").attr("checked","checked");
+			}
 		}
 
 		$("#layers ul").append(toggle);
 	}
+	document.body.className = "checker";
 }
