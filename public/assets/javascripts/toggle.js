@@ -53,15 +53,17 @@ function Background (bgz, def) {
 		toggle.innerHTML = '<span><input type="radio" name="bg"></span><img src="/assets/images/' + bg + '.jpg"><p>' + bg + '</p>';
 		toggle.setAttribute("value", bg);
 		toggle.onclick = function(){
-			document.body.className = BG = this.getAttribute("value");
-			$(this).find("input").attr("checked","checked");
-		}
-
-		if (bgz[i] == def) {
-			$("li").find("input").attr("checked", "checked");
-			document.body.className = bgz[i];
+			var klass = this.getAttribute("value");
+			if (klass == BG) {
+				document.body.className = BG = "checker";
+				$(this).find("input").attr("checked", false);
+			} else {
+				document.body.className = BG = klass;
+				$(this).find("input").attr("checked","checked");
+			}
 		}
 
 		$("#layers ul").append(toggle);
 	}
+	document.body.className = "checker";
 }
