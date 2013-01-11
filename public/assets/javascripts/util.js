@@ -124,4 +124,5 @@ function nearEdgeOfSelection (e, m) {
 
     }
 })(jQuery);
+
 $('#toolbar, #layers').drags();

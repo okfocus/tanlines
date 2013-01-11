@@ -54,6 +54,8 @@ function Background (bgz, def) {
 		toggle.setAttribute("value", bg);
 		toggle.onclick = function(){
 			document.body.className = BG = this.getAttribute("value");
+			$("#layers").find("li").removeClass("selected");
+			$(this).addClass("selected");
 			$(this).find("input").attr("checked","checked");
 		}
 

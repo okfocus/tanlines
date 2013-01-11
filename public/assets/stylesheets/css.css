@@ -6,6 +6,12 @@ html,body {
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 #buffer {
 	display: none;
@@ -54,6 +60,10 @@ body.badlands {
 	background-image: url(/assets/images/badlands.jpg);
 	background-size: cover;
 	background-position: center center;
+}
+
+body.brooklynbridge canvas{
+	-webkit-filter: grayscale(100%);  
 }
 
 canvas {
@@ -395,13 +405,10 @@ p {
 	cursor: pointer;
 	background: #b5d5ff;
 }
-#layers ul li.active {
-	width: 100%;
+#layers ul li.selected {
 	background: #b5d5ff;
-	height: 40px;
-	border-bottom: 1px solid #909090;
-	clear: both
 }
+
 #layers ul li.active span {
 	background: #d6d6d6;
 }
@@ -412,6 +419,7 @@ p {
 	border-right: 1px solid #909090;
 	padding: 4px 4px 3px 4px;
 	display: inline-block;
+	background: #d6d6d6;
 	float: left;
 }
 #layers ul li span input {
@@ -424,6 +432,7 @@ p {
 	height: 15px;
 	margin: 7px 5px;
 }
+
 #layers ul li span input:checked {
 	background: url(https://s3.amazonaws.com/luckyplop/f7ba02119491984908e0d3c56d1372885663b5d7.png)no-repeat 0 -203px;
 }
