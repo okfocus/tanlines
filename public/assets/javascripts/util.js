@@ -60,40 +60,21 @@ TOP_LEFT = 8;
 var edgeEnum = "NONE TOP TOP_RIGHT RIGHT BOTTOM_RIGHT BOTTOM BOTTOM_LEFT LEFT TOP_LEFT".split(" ");
 
 // Detect if the mouse event (e) is close to the edge of an object on hover
-function nearEdgeOfSelection (e, m, flip, flop) {
+function nearEdgeOfSelection (e, m) {
 	var shim = 20,
 	x = e.pageX,
 	y = e.pageY,
-	bottom = window.innerHeight - m.bottom;
-	var top_lower, top_upper, bottom_lower, bottom_upper,
-	left_lower, left_upper, right_lower, right_upper;
+	bottom = window.innerHeight - m.bottom,
 	
 	// bounds checking
-	if (flop) {
-		top_lower    = bottom - shim < y,
-		top_upper    = y < bottom + shim,
-		bottom_lower = bottom - m.height - shim < y,
-		bottom_upper = y < bottom - m.height + shim;
-	}
-	else {
-		top_lower    = bottom - m.height - shim < y,
-		top_upper    = y < bottom - m.height + shim,
-		bottom_lower = bottom - shim < y,
-		bottom_upper = y < bottom + shim;
-	}
-
-	if (flip) {
-		left_lower   = m.left + m.width - shim < x,
-		left_upper   = x < m.left + m.width + shim,
-		right_lower  = m.left - shim < x,
-		right_upper  = x < m.left + shim;
-	}
-	else {
-		left_lower   = m.left - shim < x,
-		left_upper   = x < m.left + shim,
-		right_lower  = m.left + m.width - shim < x,
-		right_upper  = x < m.left + m.width + shim;
-	}
+	top_lower    = bottom - m.height - shim < y,
+	top_upper    = y < bottom - m.height + shim,
+	bottom_lower = bottom - shim < y,
+	bottom_upper = y < bottom + shim,
+	left_lower   = m.left - shim < x,
+	left_upper   = x < m.left + shim,
+	right_lower  = m.left + m.width - shim < x,
+	right_upper  = x < m.left + m.width + shim;
 	
 	if (top_upper && top_lower) {
 		if (left_upper && left_lower) {
@@ -120,3 +101,45 @@ function nearEdgeOfSelection (e, m, flip, flop) {
 	}
 	return 0;
 }
+(function($) {
+    $.fn.drags = function(opt) {
+
+        opt = $.extend({handle:"",cursor:"move"}, opt);
+
+        if(opt.handle === "") {
+            var $el = this;
+        } else {
+            var $el = this.find(opt.handle);
+        }
+
+        return $el.css('cursor', opt.cursor).on("mousedown", function(e) {
+            if(opt.handle === "") {
+                var $drag = $(this).addClass('draggable');
+            } else {
+                var $drag = $(this).addClass('active-handle').parent().addClass('draggable');
+            }
+            var z_idx = $drag.css('z-index'),
+                drg_h = $drag.outerHeight(),
+                drg_w = $drag.outerWidth(),
+                pos_y = $drag.offset().top + drg_h - e.pageY,
+                pos_x = $drag.offset().left + drg_w - e.pageX;
+            $drag.css('z-index', 1000).parents().on("mousemove", function(e) {
+                $('.draggable').offset({
+                    top:e.pageY + pos_y - drg_h,
+                    left:e.pageX + pos_x - drg_w
+                }).on("mouseup", function() {
+                    $(this).removeClass('draggable').css('z-index', z_idx);
+                });
+            });
+            e.preventDefault(); // disable selection
+        }).on("mouseup", function() {
+            if(opt.handle === "") {
+                $(this).removeClass('draggable');
+            } else {
+                $(this).removeClass('active-handle').parent().removeClass('draggable');
+            }
+        });
+
+    }
+})(jQuery);
+$('#toolbar, #layers').drags();
