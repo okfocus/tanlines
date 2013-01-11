@@ -82,6 +82,7 @@ canvas {
 header{
 	width: 100%;
 	text-align: center;
+	text-shadow:-1px 1px rgba(255,255,255,0.7);
 	z-index: 10000;
 }
 
