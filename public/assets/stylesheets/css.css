@@ -416,7 +416,9 @@ p {
 #layers ul li.selected {
 	background: #b5d5ff;
 }
-
+#layers ul li.selected p{
+	font-weight:600;
+}
 #layers ul li.active span {
 	background: #d6d6d6;
 }
