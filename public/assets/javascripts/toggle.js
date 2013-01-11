@@ -72,7 +72,9 @@ function Background (bgz, def) {
 	}
 }
 
-
+var dumping = false;
 $('.dumptoggle').click(function() {
-    $("#dumpfm").toggle();
+	dumping = ! dumping;
+	$(".dumptoggle input").attr('checked', dumping);
+	$("#dumpfm").toggle();
 });

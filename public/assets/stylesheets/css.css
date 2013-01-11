@@ -118,6 +118,9 @@ header * {
 .preload #loader, .preload #loader * {
   -webkit-filter: grayscale(0.5);
 }
+.preload header {
+	opacity: 0;
+}
 
 @-webkit-keyframes a {
 	0% {
