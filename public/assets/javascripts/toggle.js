@@ -56,11 +56,12 @@ function Background (bgz, def) {
 		toggle.setAttribute("value", bg);
 		toggle.onclick = function(){
 			$("#layers").find("li").removeClass("selected");
-					$(this).addClass("selected");
+			$(this).addClass("selected");
 			var klass = this.getAttribute("value");
 			if (klass == BG) {
 				document.body.className = BG = "checker";
 				$(this).find("input").attr("checked", false);
+				$(".selected").removeClass("selected");
 			} else {
 				document.body.className = BG = klass;
 				$(this).find("input").attr("checked","checked");
