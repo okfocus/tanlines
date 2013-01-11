@@ -46,24 +46,22 @@ $("#toolbar .color").click(function(){
 });
 
 function Background (bgz, def) {
-	var br = document.createElement("br");
-	document.getElementById("controls").appendChild(br);
 	for (var i = 0; i < bgz.length; i++) {
-		var span = document.createElement("span");
-		var toggle = document.createElement("input");
-		toggle.type = "radio";
-		toggle.name = "bg";
-		toggle.value = bgz[i];
+		var bg = bgz[i];
+
+		var toggle = document.createElement("li");
+		toggle.innerHTML = '<span><input type="radio" name="bg"></span><img src="/assets/images/' + bg + '.jpg"><p>' + bg + '</p>';
+		toggle.setAttribute("value", bg);
 		toggle.onclick = function(){
-			document.body.className = this.value;
-			BG = this.value;
+			document.body.className = BG = this.getAttribute("value");
+			$(this).find("input").attr("checked","checked");
 		}
+
 		if (bgz[i] == def) {
-			toggle.checked = true;
+			$("li").find("input").attr("checked", "checked");
 			document.body.className = bgz[i];
 		}
-		span.appendChild(toggle);
-		document.getElementById("controls").appendChild(span);
 
+		$("#layers ul").append(toggle);
 	}
 }
