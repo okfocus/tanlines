@@ -4,6 +4,7 @@ var videos = [];
 // Instruments coordinate turning on and off videos and stems.
 function Instrument (key, videoList) {
 	var base = this;
+	base.key = key;
 	base.ready = true;
 	base.active = true;
 	base.auto = true;
