@@ -13,9 +13,11 @@ function Master() {
 	this.error = false;
 	var startTime = 0;
 	var paused = false;
+	var reset = false;
 
 	function init (){
 		checkBrowser();
+		$("#replay").click(base.replay);
 	}
 	function checkBrowser (){
 		if ($.browser.firefox) {
@@ -62,6 +64,20 @@ function Master() {
 		base.ready();
 		
 	}
+
+	this.ended = function(){
+		base.endedCount += 1;
+		if (base.endedCount > 3) {
+			base.hideAll();
+			$("#finished").fadeIn(400);
+		}
+	}
+	
+	this.replay = function(){
+		$("#finished").fadeOut(400, function(){
+			base.seek(0);
+		});
+	}
 	
 	// Public: All the players are ready, video starts automatically
 	this.ready = function(){
@@ -70,16 +86,24 @@ function Master() {
 		loop(startTime);
 	}
 	
-	// Public: Show all the videos from all the instruments
+	// Public: Show all the videos
 	this.showAll = function() {
 		for (var i = 0; i < instruments.length; i++) {
 			instruments[i].show();
 		}
 	}
 
+	// Public: Hide all the videos
+	this.hideAll = function() {
+		for (var i = 0; i < instruments.length; i++) {
+			instruments[i].hide();
+		}
+	}
+
 	// Public: First reset the audio, then tell the audio to play,
 	// ..then tell the videos to play.  Preserve sync as best we can.
 	this.play = function (){
+		base.endedCount = 0;
 		for (var i = 0; i < instruments.length; i++) {
 			instruments[i].audio.seekToBeginning();
 		}
@@ -89,6 +113,7 @@ function Master() {
 		for (var i = 0; i < videos.length; i++) {
 			videos[i].seekToBeginning();
 		}
+		startTime = Date.now();
 	}
 	
 	// Public: Pause/unpause the videos.
@@ -100,11 +125,40 @@ function Master() {
 		}
 	}
 	
-	this.seek = function(){
+	// Public: Seek to a specific time
+	this.seek = function(when){
+		reset = true;
+		when = clamp(when, 0, 500);
+		base.endedCount = 0;
+		for (var i = 0; i < instruments.length; i++) {
+			instruments[i].audio.audio.pause();
+			instruments[i].audio.audio.currentTime = when;
+			instruments[i].audio.audio.volume = 1.0;
+			instruments[i].auto = true;
+		}
+		for (var i = 0; i < videos.length; i++) {
+			videos[i].video.pause();
+			videos[i].video.currentTime = when;
+			videos[i].resetTimeline();
+			videos[i].output.style.display = "none";
+			videos[i].loop(0);
+		}
+		setTimeout(function(){
+			reset = false;
+			startTime = Date.now() - (when * 1000);
+			for (var i = 0; i < instruments.length; i++) {
+				instruments[i].audio.audio.play();
+			}
+			for (var i = 0; i < videos.length; i++) {
+				videos[i].video.play();
+			}
+			loop();
+		}, 1200);
 	}
 	
 	// Private: Animation loop.  Tell the videos to render themselves.
 	function loop(){
+		if (reset) return;
 		requestAnimFrame(loop);
 		stats.begin();
 		var position = (Date.now() - startTime) / 1000;

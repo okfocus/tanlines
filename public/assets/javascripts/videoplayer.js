@@ -18,6 +18,9 @@ function VideoPlayer(instrument, src) {
   var output = document.createElement("canvas");
   var out = output.getContext('2d');
   output.style.position = "absolute";
+
+	// Make these things accessible..
+  base.video = video;
   base.output = output;
   base.$output = $(output);
 	
@@ -56,7 +59,7 @@ function VideoPlayer(instrument, src) {
     source.src = videoFileUrl;
     source.type = VIDEO_MIME;
     video.addEventListener('loadedmetadata', loaded, false);
-    video.addEventListener('ended', base.seekToBeginning, false);
+    // video.addEventListener('ended', base.seekToBeginning, false);
     video.appendChild(source);
 		master.add();
   }
@@ -106,12 +109,6 @@ function VideoPlayer(instrument, src) {
     video.currentTime = 0;
     video.play();
 	}
-	
-	// Public: Just rewind the video and pause
-  this.seekToBeginningAndPause = function () {
-    video.pause();
-    video.currentTime = 0;
-  }
 
 	// Private: Check if the video should be displayed at this time
 	function advanceTimeline(t){
@@ -134,6 +131,17 @@ function VideoPlayer(instrument, src) {
 				}
 			}
 		}
+	}
+	
+	// Public: Reset the timeline index (catches up within a couple frames)
+	this.resetTimeline = function(){
+		timeIndex = 0;
+		opacity = 0.05;
+		destOpacity = 0;
+		active = false;
+	}
+	this.report = function(){
+		console.log(opacity, destOpacity, timeIndex, instrument.auto);
 	}
 
 	// Public: Animation loop, called each frame.
