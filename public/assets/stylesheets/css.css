@@ -391,7 +391,7 @@ p {
 	box-shadow: 0 0 10px #eee;
 	z-index: 10000 !important;
 	position: absolute;
-	bottom: 50px;
+	top: 80px;
 	right: 30px;
 }
 #layers ul {
