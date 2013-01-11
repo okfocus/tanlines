@@ -57,8 +57,10 @@ function Master() {
 			return;
 		}
 		$("#loader").hide();
+		$("body").removeClass("preload");
 		console.log("ready!");
 		base.ready();
+		
 	}
 	
 	// Public: All the players are ready, video starts automatically

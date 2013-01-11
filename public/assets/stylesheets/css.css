@@ -104,6 +104,18 @@ header * {
 	z-index:0;
 }
 
+.preload * {
+	animation: a 0s!important;
+	-moz-animation: a 0s!important; /* Firefox */
+	-webkit-animation: a 0s!important; /* Safari and Chrome */
+	-o-animation: a 0s!important;
+	animation: b 0s!important;
+	-moz-animation: b 0s!important; /* Firefox */
+	-webkit-animation: b 0s!important; /* Safari and Chrome */
+	-o-animation: b 0s!important;
+	 -webkit-filter: grayscale(0.5) blur(20px);
+}
+
 @-webkit-keyframes a {
 	0% {
 		opacity: 0;
