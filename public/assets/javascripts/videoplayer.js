@@ -40,11 +40,13 @@ function VideoPlayer(instrument, src) {
 	
 	// Geometry data
   var width, height;
+	base.m = {};
 	base.width = 0;
 	base.height = 0;
 	base.x = rand(window.innerWidth * 3/4);
 	base.y = rand(window.innerHeight * 3/4);
-	base.m = {};
+	base.flip = false;
+	base.flop = false;
 	
   init();
 
@@ -233,8 +235,9 @@ function VideoPlayer(instrument, src) {
 		// Are we resizing, or just dragging?
 		resizing = nearEdgeOfSelection(e, base.m);
 
-		console.log(edgeEnum[resizing]);
 		if (resizing) {
+			currentlyFlipped = base.flip;
+			currentlyFlopped = base.flop;
 			resizeMarquee = $.extend({}, base.m);
 		}
   }
@@ -247,6 +250,8 @@ var x = 0;
 var y = 0;
 var dragging = false;
 var resizing = false;
+var currentlyFlipped = false;
+var currentlyFlopped = false;
 var resizeMarquee = {};
 
 // While we're dragging/resizing..
@@ -292,20 +297,44 @@ window.onmousemove = function(e){
 					break;
 			}
 			
+			flip = dragging.flip, flop = dragging.flop;
 			if (m.width < 0) {
-				m.left += m.width;
 				m.width = Math.abs(m.width);
-				klass = "flip";
+				switch (resizing) {
+					case LEFT:
+					case TOP_LEFT:
+					case BOTTOM_LEFT:
+						m.left = dragging.m.left + dragging.m.width;
+						break;
+					case RIGHT:
+					case TOP_RIGHT:
+					case BOTTOM_RIGHT:
+						m.left = dragging.m.left - m.width;
+						break;
+				}
+				flip = ! flip;
 			}
 			if (m.height < 0) {
-				m.bottom += m.height;
 				m.height = Math.abs(m.height);
-				if (klass) {
-					klass = "flip flop";
-				} else {
-					klass = "flop";
+
+				switch (resizing) {
+					case TOP:
+					case TOP_LEFT:
+					case TOP_RIGHT:
+						m.bottom = dragging.m.bottom - m.height;
+						break;
+					case BOTTOM:
+					case BOTTOM_LEFT:
+					case BOTTOM_RIGHT:
+						m.bottom = dragging.m.bottom + dragging.m.height;
+						break;
 				}
+				flop = ! flop;
 			}
+			if (flip && flop) klass = "flip flop";
+			else if (flip) klass = "flip";
+			else if (flop) klass = "flop";
+
 			dragging.output.className = klass;
 			dragging.$output.css(m);
   	}
@@ -317,13 +346,20 @@ window.onmousemove = function(e){
   }
 }
 
-// When we're done dragging..
+// When we're done dragging, store the new state.
 window.onmouseup = function(){
   if (dragging) {
   	if (resizing) {
   		dragging.m = resizeMarquee;
-//  		dragging.setXY(resizeMarquee.x, resizeMarquee.y);
+  		dragging.width = resizeMarquee.width;
+  		dragging.height = resizeMarquee.height;
+  		dragging.flip = flip;
+  		dragging.flop = flop;
+  		dragging.setXY(resizeMarquee.left, resizeMarquee.bottom);
   	}
+		for (var i = 0; i < videos.length; i++) {
+			videos[i].hovering = false;
+		}
     dragging = false;
     resizing = false;
   }
