@@ -58,7 +58,11 @@ body.badlands {
 	background-size: cover;
 	background-position: center center;
 }
-
+body.clouds {
+	background-image: url(/assets/images/clouds.gif);
+	background-size: cover;
+	background-position: center center;
+}
 canvas {
 	cursor: move;
 	border: 1px transparent solid;
@@ -231,6 +235,9 @@ p {
 	padding-top: 20px;
 	box-shadow: 0 0 10px #eee;
 	z-index: 10000 !important;
+	position: absolute;
+	top: 50px;
+	left: 30px;
 }
 #toolbar ul {
 	list-style: none;
@@ -364,7 +371,6 @@ p {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	margin: 30px;
-	float:right;
 	background: #d6d6d6 url(https://s3.amazonaws.com/luckyplop/f7ba02119491984908e0d3c56d1372885663b5d7.png)no-repeat 0 -478px;
 	border: 1px solid #333;
 	-webkit-border-top-left-radius: 4px;
@@ -377,6 +383,9 @@ p {
 	height: 163px;
 	box-shadow: 0 0 10px #eee;
 	z-index: 10000 !important;
+	position: absolute;
+	bottom: 50px;
+	right: 30px;
 }
 #layers ul {
 	list-style: none;
