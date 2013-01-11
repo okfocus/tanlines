@@ -50,7 +50,7 @@ function Background (bgz, def) {
 		var bg = bgz[i];
 
 		var toggle = document.createElement("li");
-		toggle.innerHTML = '<span><input type="radio" name="bg"></span><img src="/assets/images/' + bg + '.jpg"><p>' + bg + '</p>';
+		toggle.innerHTML = '<span><input type="radio" name="bg"></span><img src="/assets/images/' + bg + '-small.jpg"><p>' + bg + '</p>';
 		toggle.setAttribute("value", bg);
 		toggle.onclick = function(){
 			var klass = this.getAttribute("value");

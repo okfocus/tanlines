@@ -50,6 +50,9 @@ body.brooklynbridge {
 	background-size: cover;
 	background-position: bottom center;
 }
+body.brooklynbridge canvas {
+	-webkit-filter: grayscale(1.0);
+}
 body.badlands {
 	background-image: url(/assets/images/badlands.jpg);
 	background-size: cover;
