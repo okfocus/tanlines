@@ -394,6 +394,10 @@ p {
 	border-bottom: 1px solid #909090;
 	clear: both
 }
+#layers ul li:hover {
+	cursor: pointer;
+	background: #b5d5ff;
+}
 #layers ul li.active {
 	width: 100%;
 	background: #b5d5ff;
@@ -437,6 +441,7 @@ p {
 #layers img {
 	float: left;
 	border: 1px solid #333;
+	width: 40px;
 	margin: 5px
 }
 #layers .bottom {
