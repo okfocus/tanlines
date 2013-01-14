@@ -71,11 +71,11 @@ var instruments = [
 
 // Initialize the background toggles
 var bg = new Background ([
-	"milkyway",
 	"beach",
 	"brooklynbridge",
 	"badlands",
 	"clouds",
+	"milkyway",
 	"jupiter"
 ]);
 
