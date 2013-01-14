@@ -202,7 +202,7 @@ h2 {
 	-webkit-animation-iteration-count: 1;
 	-webkit-animation-delay: 0s;
 }
-p {
+header p {
 	font-size:13px;
 	-webkit-animation-name:b;
 	-webkit-animation-duration:3s;
@@ -542,6 +542,8 @@ p {
 	max-width: 40px;
 	margin: 5px;
 	max-height: 30px;
+	min-width:30px;
+	min-height:28px;
 	background: url(/assets/images/checker2.png);
 }
 #layers .bottom {
