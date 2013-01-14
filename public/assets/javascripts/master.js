@@ -27,7 +27,7 @@ function Master() {
 */
 	}
 	function checkBrowser (){
-		if ($.browser.firefox) {
+		if ($.browser.mozilla) {
 			VIDEO_EXTENSION = "ogv";
 			VIDEO_MIME = 'video/ogg';
 			AUDIO_EXTENSION = "ogg";
