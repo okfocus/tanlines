@@ -78,7 +78,7 @@ function Background (bgz, def) {
 }
 
 var dumping = false, instagramming = false;
-var DUMPFM_URL = "http://dump.fm/fullscreen";
+var DUMPFM_URL = "http://dump.fm/fullscreen?nologin=1";
 var INSTAGRAM_URL =	"http://labs.okfoc.us/not-the-same/instagram.php";
 
 $('.dumptoggle').click(function() {
