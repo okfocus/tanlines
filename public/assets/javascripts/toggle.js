@@ -78,6 +78,9 @@ function Background (bgz, def) {
 }
 
 var dumping = false, instagramming = false;
+var DUMPFM_URL = "http://dump.fm/fullscreen";
+var INSTAGRAM_URL =	"http://labs.okfoc.us/not-the-same/instagram.php";
+
 $('.dumptoggle').click(function() {
 	dumping = ! dumping;
 	instagramming = false;
@@ -85,9 +88,16 @@ $('.dumptoggle').click(function() {
 	$(".instagramtoggle input").attr('checked', instagramming);
 	$("#layers").find("li").removeClass("selected");
 	$(this).addClass("selected");
-	$("#dumpfm").toggle();
-	$("#instagram").hide();
+	if (dumping) {
+		var iframe = $("<iframe>").attr({ "id": "dumpfm", "src": DUMPFM_URL }).show();
+		$("body").prepend( iframe );
+	}
+	else {
+		$("#dumpfm").remove();
+	}
+	$("#instagram").remove();
 });
+
 $('.instagramtoggle').click(function() {
 	instagramming = ! instagramming;
 	dumping = false;
@@ -96,8 +106,14 @@ $('.instagramtoggle').click(function() {
 	$(".instagramtoggle input").attr('checked', instagramming);
 	$("#layers").find("li").removeClass("selected");
 	$(this).addClass("selected");
-	$("#instagram").toggle();
-	$("#dumpfm").hide();
+	if (instagramming) {
+		$("body").prepend( $("<iframe>").attr({ "id": "instagram", "src": INSTAGRAM_URL }).show() );
+	}
+	else {
+		$("#instagram").remove();
+	}
+	$("#dumpfm").remove();
+
 	if (instagramming) {
 		document.body.className = BG = "checker";
 	}
