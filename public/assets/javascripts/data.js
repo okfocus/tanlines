@@ -80,9 +80,12 @@ var bg = new Background ([
 ]);
 
 // Initialize the stats object
-var stats = new Stats();
-stats.setMode( 0 );
-document.body.appendChild( stats.domElement );
+
+/*
+	var stats = new Stats();
+	stats.setMode( 0 );
+	document.body.appendChild( stats.domElement );
+*/
 
 // At this point, the videos will be loading.
 // Once they're ready, playback will start automatically.

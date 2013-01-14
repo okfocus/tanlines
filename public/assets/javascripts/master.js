@@ -14,6 +14,7 @@ function Master() {
 	var startTime = 0;
 	var paused = false;
 	var reset = false;
+	var ended = false;
 
 	function init (){
 		checkBrowser();
@@ -44,14 +45,13 @@ function Master() {
 	// Public: A video tells the master it is being created
 	this.add = function(){
 		base.mediaCount++;
-		$("#loaded").attr("max", base.mediaCount);
-		$("#loaded").attr("value", base.readyCount);
+		$("#loaded").css("width", Math.floor( 100 * base.readyCount / base.mediaCount ) + "%" );
 	}
 
 	// Public: A video tells the master it has loaded
 	this.loaded = function(){
 		master.readyCount++;
-		$("#loaded").attr("value", base.readyCount);
+		$("#loaded").css("width", Math.floor( 100 * base.readyCount / base.mediaCount ) + "%" );
 		if (base.mediaCount != base.readyCount) {
 			if (base.readyCount >= base.mediaCount - 3) {
 				console.log((base.mediaCount - base.readyCount) + " left")
@@ -67,11 +67,8 @@ function Master() {
 	}
 
 	this.ended = function(){
-		base.endedCount += 1;
-		if (base.endedCount > 3) {
-			base.hideAll();
-			$("#finished").fadeIn(400);
-		}
+		base.hideAll();
+		$("#finished").fadeIn(400);
 	}
 	
 	this.replay = function(){
@@ -104,7 +101,7 @@ function Master() {
 	// Public: First reset the audio, then tell the audio to play,
 	// ..then tell the videos to play.  Preserve sync as best we can.
 	this.play = function (){
-		base.endedCount = 0;
+		ended = false;
 		for (var i = 0; i < instruments.length; i++) {
 			instruments[i].audio.seekToBeginning();
 		}
@@ -130,7 +127,7 @@ function Master() {
 	this.seek = function(when){
 		reset = true;
 		when = clamp(when, 0, 500);
-		base.endedCount = 0;
+		ended = false;
 		for (var i = 0; i < instruments.length; i++) {
 			instruments[i].audio.audio.pause();
 			instruments[i].audio.audio.currentTime = when;
@@ -160,13 +157,16 @@ function Master() {
 	// Private: Animation loop.  Tell the videos to render themselves.
 	function loop(){
 		if (reset) return;
+		if (position > 270) {
+			base.ended();
+		}
 		requestAnimFrame(loop);
-		stats.begin();
+//		if (stats) stats.begin();
 		var position = (Date.now() - startTime) / 1000;
 		for (var i = 0; i < videos.length; i++) {
 			videos[i].loop(position);
 		}
-		stats.end();
+//		if (stats) stats.end();
 	}
 	
 	init();
