@@ -19,6 +19,12 @@ function Master() {
 	function init (){
 		checkBrowser();
 		$("#replay").click(base.replay);
+/*
+		setInterval(function(){
+			base.readyCount += 0.05
+			$("#loaded").css("width", Math.floor( 100 * base.readyCount / (base.mediaCount || 20) ) + "%" );
+		}, 400);
+*/
 	}
 	function checkBrowser (){
 		if ($.browser.firefox) {
@@ -52,7 +58,7 @@ function Master() {
 	this.loaded = function(){
 		master.readyCount++;
 		$("#loaded").css("width", Math.floor( 100 * base.readyCount / base.mediaCount ) + "%" );
-		if (base.mediaCount != base.readyCount) {
+		if (base.mediaCount < base.readyCount) {
 			if (base.readyCount >= base.mediaCount - 3) {
 				console.log((base.mediaCount - base.readyCount) + " left")
 			}
@@ -73,6 +79,7 @@ function Master() {
 	}
 	
 	this.replay = function(){
+		reset = true;
 		$("#finished").fadeOut(400, function(){
 			base.seek(0);
 		});
@@ -128,7 +135,6 @@ function Master() {
 	this.seek = function(when){
 		reset = true;
 		when = clamp(when, 0, 500);
-		ended = false;
 		for (var i = 0; i < instruments.length; i++) {
 			instruments[i].audio.audio.pause();
 			instruments[i].audio.audio.currentTime = when;
@@ -144,6 +150,7 @@ function Master() {
 		}
 		setTimeout(function(){
 			reset = false;
+			ended = false;
 			startTime = Date.now() - (when * 1000);
 			for (var i = 0; i < instruments.length; i++) {
 				instruments[i].audio.audio.play();
