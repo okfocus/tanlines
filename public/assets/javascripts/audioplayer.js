@@ -14,6 +14,7 @@ function AudioPlayer(instrument, src) {
     source.type = AUDIO_MIME;
 
     base.audio.addEventListener('loadedmetadata', audioLoaded, false);
+    base.audio.addEventListener('error', error, false);
     base.audio.appendChild(source);
 		master.add();
   }

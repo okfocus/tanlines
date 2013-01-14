@@ -8,7 +8,7 @@ var browserErrorMsg = 'Your browser doesn\'t support HTML5 video!<br>' +
 // Master sync object
 function Master() {
 	var base = this;
-	this.mediaCount = 0;
+	this.mediaCount = 14;
 	this.readyCount = 0;
 	this.error = false;
 	var startTime = 0;
@@ -50,15 +50,17 @@ function Master() {
 
 	// Public: A video tells the master it is being created
 	this.add = function(){
-		base.mediaCount++;
+//		base.mediaCount++;
+		console.log("add");
 		$("#loaded").css("width", Math.floor( 100 * base.readyCount / base.mediaCount ) + "%" );
 	}
 
 	// Public: A video tells the master it has loaded
 	this.loaded = function(){
 		master.readyCount++;
+		console.log("loaded " + master.readyCount + " / " + master.mediaCount);
 		$("#loaded").css("width", Math.floor( 100 * base.readyCount / base.mediaCount ) + "%" );
-		if (base.mediaCount < base.readyCount) {
+		if (base.readyCount != base.mediaCount) {
 			if (base.readyCount >= base.mediaCount - 3) {
 				console.log((base.mediaCount - base.readyCount) + " left")
 			}
@@ -68,8 +70,7 @@ function Master() {
 		$("body").removeClass("preload");
 		$("body").addClass("checker");
 		console.log("ready!");
-		base.ready();
-		
+		base.ready();	
 	}
 
 	this.ended = function(){
