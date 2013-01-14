@@ -19,6 +19,12 @@ function Master() {
 	function init (){
 		checkBrowser();
 		$("#replay").click(base.replay);
+/*
+		setInterval(function(){
+			base.readyCount += 0.05
+			$("#loaded").css("width", Math.floor( 100 * base.readyCount / (base.mediaCount || 20) ) + "%" );
+		}, 400);
+*/
 	}
 	function checkBrowser (){
 		if ($.browser.firefox) {
@@ -52,7 +58,7 @@ function Master() {
 	this.loaded = function(){
 		master.readyCount++;
 		$("#loaded").css("width", Math.floor( 100 * base.readyCount / base.mediaCount ) + "%" );
-		if (base.mediaCount != base.readyCount) {
+		if (base.mediaCount < base.readyCount) {
 			if (base.readyCount >= base.mediaCount - 3) {
 				console.log((base.mediaCount - base.readyCount) + " left")
 			}
