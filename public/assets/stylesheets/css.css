@@ -323,7 +323,7 @@ header p {
 	border-radius: 9px 0 0 9px;
 	background-image: url(/assets/images/progress.png);
 	-webkit-animation: prog .4s infinite linear !important;
-	-webkit-transition: width 0.1s ease-out;
+	-webkit-transition: width 0.4s ease-out;
 }
 
 #toolbar {
