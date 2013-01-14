@@ -29,7 +29,7 @@ function VideoPlayer(instrument, src) {
 	var timeIndex = 0;
 	
 	// Fetch key-out threshold of this video
-	var max_thresh = src in thresholds ? thresholds[src] : 190;
+	var max_thresh = src in thresholds ? thresholds[src] : 190;
 	var opacity = 0;
 	var destOpacity = 0;
 	
