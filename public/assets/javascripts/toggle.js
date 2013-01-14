@@ -76,5 +76,13 @@ var dumping = false;
 $('.dumptoggle').click(function() {
 	dumping = ! dumping;
 	$(".dumptoggle input").attr('checked', dumping);
+	$("#layers").find("li").removeClass("selected");
+	$(this).addClass("selected");
 	$("#dumpfm").toggle();
+});
+$('.instagramtoggle').click(function() {
+	$(".instagramtoggle input").attr('checked', dumping);
+	$("#layers").find("li").removeClass("selected");
+	$(this).addClass("selected");
+	$("#instagram").toggle();
 });
