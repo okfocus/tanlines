@@ -67,6 +67,7 @@ function Master() {
 	}
 
 	this.ended = function(){
+		ended = true;
 		base.hideAll();
 		$("#finished").fadeIn(400);
 	}
@@ -157,12 +158,13 @@ function Master() {
 	// Private: Animation loop.  Tell the videos to render themselves.
 	function loop(){
 		if (reset) return;
-		if (position > 270) {
+		requestAnimFrame(loop);
+
+		var position = (Date.now() - startTime) / 1000;
+		if (position > 282) {
 			base.ended();
 		}
-		requestAnimFrame(loop);
 //		if (stats) stats.begin();
-		var position = (Date.now() - startTime) / 1000;
 		for (var i = 0; i < videos.length; i++) {
 			videos[i].loop(position);
 		}
