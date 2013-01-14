@@ -70,6 +70,10 @@ body.clouds {
 	background-size: cover;
 	background-position: center center;
 }
+body.jupiter {
+	background-image: url(/assets/images/jupiter.jpg);
+	background-position: center center;
+}
 canvas {
 	cursor: url(https://s3.amazonaws.com/luckyplop/161cfec5d90c76136c77d2b1d15420d39f6103b3.png),move;
 	border: 1px transparent solid;

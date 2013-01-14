@@ -75,7 +75,8 @@ var bg = new Background ([
 	"beach",
 	"brooklynbridge",
 	"badlands",
-	"clouds"
+	"clouds",
+	"jupiter"
 ]);
 
 // Initialize the stats object
