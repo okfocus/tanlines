@@ -50,15 +50,12 @@ function Master() {
 
 	// Public: A video tells the master it is being created
 	this.add = function(){
-//		base.mediaCount++;
-		console.log("add");
 		$("#loaded").css("width", Math.floor( 100 * base.readyCount / base.mediaCount ) + "%" );
 	}
 
 	// Public: A video tells the master it has loaded
 	this.loaded = function(){
 		master.readyCount++;
-		console.log("loaded " + master.readyCount + " / " + master.mediaCount);
 		$("#loaded").css("width", Math.floor( 100 * base.readyCount / base.mediaCount ) + "%" );
 		if (base.readyCount != base.mediaCount) {
 			if (base.readyCount >= base.mediaCount - 3) {
@@ -160,7 +157,7 @@ function Master() {
 				videos[i].video.play();
 			}
 			loop();
-		}, 1200);
+		}, 1500);
 	}
 	
 	// Private: Animation loop.  Tell the videos to render themselves.
