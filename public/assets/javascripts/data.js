@@ -64,10 +64,14 @@ var instruments = [
 	new Instrument('vocals',  [ ]),
 	new Instrument('piano',   [ 'piano' ]),
 	new Instrument('drums',   [ 'drums-guitar', 'floortom' ]),
-	new Instrument('synths',  [ 'microkorg', 'keyboard-with-amp', 'synth' ]),
 	new Instrument('guitars', [ 'guitar-voice' ]),
 	new Instrument('strings', [ 'strings' ]),
+	new Instrument('synths',  [ 'microkorg', 'keyboard-with-amp', 'synth' ]),
 ];
+
+// Start the videos loading.
+// Once they're ready, playback starts automatically.
+master.load();
 
 // Initialize the background toggles
 var bg = new Background ([
@@ -86,7 +90,3 @@ var bg = new Background ([
 	stats.setMode( 0 );
 	document.body.appendChild( stats.domElement );
 */
-
-// At this point, the videos will be loading.
-// Once they're ready, playback will start automatically.
-

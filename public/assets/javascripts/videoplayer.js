@@ -23,6 +23,7 @@ function VideoPlayer(instrument, src) {
   base.video = video;
   base.output = output;
   base.$output = $(output);
+  base.loaded = false;
 	
 	// Fetch timeline data
 	var times = src in timing ? timing[src] : timing['piano'];
@@ -52,20 +53,47 @@ function VideoPlayer(instrument, src) {
 	base.flip = false;
 	base.flop = false;
 	
-  init();
-
 	// Private: Build the video object
   function init() {
     source.src = videoFileUrl;
     source.type = VIDEO_MIME;
     video.addEventListener('loadedmetadata', loaded, false);
+    video.addEventListener('error', failed, false);
     // video.addEventListener('ended', base.seekToBeginning, false);
-    video.appendChild(source);
-		master.add();
+		master.add(base);
+    base.load();
   }
+  
+	// Public: Tell this channel to load
+  base.load = function(){
+    video.appendChild(source);
+  }
+  
+  function failed(e) {
+   // video playback failed - show a message saying why
+   switch (e.target.error.code) {
+     case e.target.error.MEDIA_ERR_ABORTED:
+       console.log(src + ': You aborted the video playback.');
+       break;
+     case e.target.error.MEDIA_ERR_NETWORK:
+       console.log(src + ': A network error caused the video download to fail part-way.');
+       break;
+     case e.target.error.MEDIA_ERR_DECODE:
+       console.log(src + ': The video playback was aborted due to a corruption problem or because the video used features your browser did not support.');
+       break;
+     case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+       console.log(src + ': The video could not be loaded, either because the server or network failed or because the format is not supported.');
+       break;
+     default:
+       console.log(src + ': An unknown error occurred.');
+       break;
+   }
+ }
   
   // Private: When the video has loaded..
   function loaded () {
+  	base.loaded = true;
+  	
     buffer.width = video.videoWidth;
     buffer.height = video.videoHeight;
 
@@ -250,6 +278,8 @@ function VideoPlayer(instrument, src) {
 			resizeMarquee = $.extend({}, base.m);
 		}
   }
+
+  init();
 }
 
 // Globals involved in dragging/resizing

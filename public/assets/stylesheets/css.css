@@ -310,6 +310,7 @@ header p {
 	margin-left: -135px;
 	text-align: center;
 	z-index: 20000;
+	overflow: hidden;
 }
 #loader #progress {
 	width: 100%;
@@ -327,6 +328,9 @@ header p {
 	background-image: url(/assets/images/progress.png);
 	-webkit-animation: prog .4s infinite linear !important;
 	-webkit-transition: width 0.4s ease-out;
+}
+#loader #loaded.done {
+	border-radius: 9px 9px 9px 9px;
 }
 
 #toolbar {

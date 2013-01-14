@@ -48,18 +48,50 @@ function Master() {
 		}
 	}
 
+	var players = [];
+	var loadIndex = 0;
+	var loading = 0;
+
 	// Public: A video tells the master it is being created
-	this.add = function(){
-		$("#loaded").css("width", Math.floor( 100 * base.readyCount / base.mediaCount ) + "%" );
+	this.add = function(player){
+		players.push(player);
+	}
+	this.report = function(){
+		console.log(loadIndex, loading);
+	}
+	this.load = function(){
+		if (loadIndex < master.mediaCount) {
+			for (; loading < 4; loading++) {
+				if (! players[loadIndex].loaded) {
+					players[loadIndex].load();
+				}
+				loadIndex += 1;
+			}
+		}
+	}
+	
+	function updateProgress (){
+		var percent = Math.floor( clamp((109 * base.readyCount / base.mediaCount), 0, 100) );
+		$("#loaded").css("width", percent + "%" );
+		if (percent >= 95) {
+			$("#loaded").addClass("done");
+		}
+		else if (percent >= 80) {
+			
+		}
 	}
 
 	// Public: A video tells the master it has loaded
 	this.loaded = function(){
 		master.readyCount++;
-		$("#loaded").css("width", Math.floor( 100 * base.readyCount / base.mediaCount ) + "%" );
+		loading--;
+		updateProgress();
 		if (base.readyCount != base.mediaCount) {
 			if (base.readyCount >= base.mediaCount - 3) {
 				console.log((base.mediaCount - base.readyCount) + " left")
+			}
+			if (loading < 4) {
+				base.load();
 			}
 			return;
 		}

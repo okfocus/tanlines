@@ -7,6 +7,7 @@ function AudioPlayer(instrument, src) {
 	base.audio = document.createElement("audio");
   var source = document.createElement("source");
   var audioFileUrl = "/assets/sounds/" + src + "." + AUDIO_EXTENSION;
+  base.loaded = false;
   
   // Private: Initialize the HTML5 audio object
   function audioInit(){
@@ -15,13 +16,18 @@ function AudioPlayer(instrument, src) {
 
     base.audio.addEventListener('loadedmetadata', audioLoaded, false);
     base.audio.addEventListener('error', error, false);
-    base.audio.appendChild(source);
-		master.add();
+		master.add(base);
   }
+
+	// Public: Tell this channel to load
+	base.load = function(){
+    base.audio.appendChild(source);
+	}
   
   // Private: When it loads, tell the master track
   function audioLoaded () {
   	console.log("audio " + src + " ready");
+  	base.loaded = true;
 		master.loaded();
 	}
 	
