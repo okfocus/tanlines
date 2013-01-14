@@ -52,9 +52,14 @@ function Background (bgz, def) {
 		var bg = bgz[i];
 
 		var toggle = document.createElement("li");
+		toggle.className = bg;
 		toggle.innerHTML = '<span><input type="radio" name="bg"></span><img src="/assets/images/' + bg + '-small.jpg"><p>' + bg + '</p>';
 		toggle.setAttribute("value", bg);
 		toggle.onclick = function(){
+			$("#instagram").hide();
+			instagramming = false;
+			$(".instagramtoggle input").attr('checked', instagramming);
+			
 			$("#layers").find("li").removeClass("selected");
 			$(this).addClass("selected");
 			var klass = this.getAttribute("value");
@@ -72,17 +77,28 @@ function Background (bgz, def) {
 	}
 }
 
-var dumping = false;
+var dumping = false, instagramming = false;
 $('.dumptoggle').click(function() {
 	dumping = ! dumping;
+	instagramming = false;
 	$(".dumptoggle input").attr('checked', dumping);
+	$(".instagramtoggle input").attr('checked', instagramming);
 	$("#layers").find("li").removeClass("selected");
 	$(this).addClass("selected");
 	$("#dumpfm").toggle();
+	$("#instagram").hide();
 });
 $('.instagramtoggle').click(function() {
-	$(".instagramtoggle input").attr('checked', dumping);
+	instagramming = ! instagramming;
+	dumping = false;
+	$("#layers").find("input").attr("checked", false);
+	$(".dumptoggle input").attr('checked', dumping);
+	$(".instagramtoggle input").attr('checked', instagramming);
 	$("#layers").find("li").removeClass("selected");
 	$(this).addClass("selected");
 	$("#instagram").toggle();
+	$("#dumpfm").hide();
+	if (instagramming) {
+		document.body.className = BG = "checker";
+	}
 });
