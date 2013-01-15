@@ -21,12 +21,10 @@ function AudioPlayer(instrument, src) {
 	// Public: Tell this channel to load
 	base.load = function(){
     // base.audio.appendChild(source);
-    console.log(src + " gay ");
 		base.sound = soundManager.createSound({
 			id: src,
 			url: audioFileUrl,
 			onload: function(){
-				console.log(src + " loaded");
 				audioLoaded();
 			}
 		});

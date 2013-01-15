@@ -115,7 +115,7 @@ function VideoPlayer(instrument, src) {
     base.setXY(base.x, base.y);
 		base.makeMarquee();
 		
-		document.body.appendChild(output);
+		document.getElementById("rapper").appendChild(output);
 
   	console.log("video " + src + " ready ", width, height);
 		master.loaded();
