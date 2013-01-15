@@ -39,7 +39,9 @@ $("#toolbar .color").click(function(){
   INVERT = ! INVERT;
   if (INVERT) {
   	$("#toolbar .color").addClass("invert");
-		document.body.className = "invert";
+  	if (BG == "checker") {
+			document.body.className = "invert";
+		}
   }
   else {
   	$("#toolbar .color").removeClass("invert");
@@ -64,7 +66,8 @@ function Background (bgz, def) {
 			$(this).addClass("selected");
 			var klass = this.getAttribute("value");
 			if (klass == BG) {
-				document.body.className = BG = "checker";
+				BG = "checker";
+				document.body.className = INVERT ? "invert" : BG;
 				$(this).find("input").attr("checked", false);
 				$(".selected").removeClass("selected");
 			} else {
@@ -115,6 +118,7 @@ $('.instagramtoggle').click(function() {
 	$("#dumpfm").remove();
 
 	if (instagramming) {
-		document.body.className = BG = "checker";
+		BG = "checker";
+		document.body.className = INVERT ? "invert" : BG;
 	}
 });

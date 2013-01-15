@@ -1,8 +1,9 @@
 // Browser detection
 var VIDEO_EXTENSION, VIDEO_MIME, AUDIO_EXTENSION, AUDIO_MIME;
 var browserErrorMsg = 'Your browser doesn\'t support HTML5 video!<br>' +
-            'Please try <a href="http://www.google.com/chrome">Chrome</a> or ' +
-	          '<a href="http://www.getfirefox.org/">Firefox</a>';
+            'Please use <a href="http://www.google.com/chrome">Chrome</a>' +
+//          ' or <a href="http://www.getfirefox.org/">Firefox</a>' + 
+	          ' ;(';
 
 // Master sync object
 function Master() {
@@ -26,18 +27,20 @@ function Master() {
 */
 	}
 	function checkBrowser (){
-		if ($.browser.mozilla) {
-			VIDEO_EXTENSION = "ogv";
-			VIDEO_MIME = 'video/ogg';
-			AUDIO_EXTENSION = "ogg";
-			AUDIO_MIME = 'audio/ogg';
-		}
-		else if ($.browser.webkit) {
+		if ($.browser.webkit) {
 			VIDEO_EXTENSION = "mp4";
 			VIDEO_MIME = 'video/mp4; codecs="avc1.42E01E"';
 			AUDIO_EXTENSION = "mp3";
 			AUDIO_MIME = 'audio/mpeg';
 		}
+/*
+		else if ($.browser.mozilla) {
+			VIDEO_EXTENSION = "ogv";
+			VIDEO_MIME = 'video/ogg';
+			AUDIO_EXTENSION = "ogg";
+			AUDIO_MIME = 'audio/ogg';
+		}
+*/
 		else {
 			// can't play html5 video..
 			this.error = true;

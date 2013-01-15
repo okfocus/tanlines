@@ -87,7 +87,9 @@ var bg = new Background ([
 	"brooklynbridge",
 	"badlands",
 	"clouds",
+	"forest",
 	"milkyway",
+	"nightlights",
 	"jupiter"
 ]);
 
