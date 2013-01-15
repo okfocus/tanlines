@@ -23,15 +23,7 @@ video {
 canvas {
 	display: none;
 }
-#social {
-	margin-top:-7px;
-	opacity: 1;
-	-webkit-transition: opacity 2s ease-out;
-	-webkit-animation-name:b;
-	-webkit-animation-duration:3s;
-	-webkit-animation-iteration-count: 1;
-	-webkit-animation-delay: 0s;
-}
+
 .twitter-share-button {
 	position: relative;
 	top: 4px;
@@ -318,7 +310,15 @@ header p {
 	-webkit-animation-iteration-count: 1;
 	-webkit-animation-delay: 0s;
 }
-
+#social {
+	margin-top:-7px;
+	opacity: 1;
+	-webkit-transition: opacity 2s ease-out;
+	-webkit-animation-name:b;
+	-webkit-animation-duration:3.5s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-delay: 0s;
+}
 #controls span input{
 	-moz-appearance: none;
 	-webkit-appearance: none;
