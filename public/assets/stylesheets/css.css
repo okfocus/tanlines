@@ -23,6 +23,18 @@ video {
 canvas {
 	display: none;
 }
+#social {
+	opacity: 1;
+	-webkit-transition: opacity 2s ease-out;
+}
+.twitter-share-button {
+	position: relative;
+	top: 4px;
+	margin-left: 5px;
+}
+.preload #social {
+	opacity: 0;
+}
 
 body {
 	-webkit-transform: translateZ(0);
