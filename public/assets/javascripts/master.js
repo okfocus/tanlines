@@ -201,6 +201,12 @@ function Master() {
 		requestAnimFrame(loop);
 
 		var position = (Date.now() - startTime) / 1000;
+
+		// vocals is its own audio player, needs to mock-activate here
+		if (31.440 < position && position < 32.000) {
+			console.log("ACTIVATE VOCALS")
+			vocalsInstrument.toggle.activate();
+		}
 		if (position > 282) {
 			base.ended();
 		}

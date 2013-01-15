@@ -24,6 +24,9 @@ function VideoPlayer(instrument, src) {
   base.output = output;
   base.$output = $(output);
   base.loaded = false;
+
+	// Special-case the guitars video
+	var isGuitars = instrument.key == "guitars";
 	
 	// Fetch timeline data
 	var times = src in timing ? timing[src] : timing['piano'];
@@ -131,7 +134,7 @@ function VideoPlayer(instrument, src) {
 	base.hide = function(){
 		destOpacity = 0.0;
 	}
-
+	
 	// Public: Rewind and start playing a video
   this.seekToBeginning = function () {
     video.pause();

@@ -1,7 +1,7 @@
 
 function Toggle (instrument, key) {
 	var base = this;
-	var active = key == "vocals";
+	var active = false;
 
   base.$checkbox = $("#toolbar ul li." + key);
   base.$checkbox.click(function(){
@@ -15,17 +15,14 @@ function Toggle (instrument, key) {
   });
   
   base.activate = function(){
-		active = true;
+		instrument.active = active = true;
 		base.$checkbox.addClass("active");
   }
   base.deactivate = function(){
-			active = false;
-			base.$checkbox.removeClass("active");
+		instrument.active = active = false;
+		base.$checkbox.removeClass("active");
   }
-  
-  if (active) base.activate();
 }
-
 
 var THRESHOLD = 1.0;
 document.getElementById("threshold").onchange = function(){

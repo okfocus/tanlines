@@ -8,6 +8,11 @@ function Instrument (key, videoList) {
 	base.ready = true;
 	base.active = true;
 	base.auto = true;
+	if (key == "vocals") {
+		vocalsInstrument = base;
+	} else if (key == "guitars") {
+		guitarsInstrument = base;
+	}
 
 	// Private: Initialize the videos, audio, and channel toggle
 	function init(){	
@@ -43,3 +48,5 @@ function Instrument (key, videoList) {
 	init();
 }
 
+var vocalsInstrument = null;
+var guitarsInstrument = null;

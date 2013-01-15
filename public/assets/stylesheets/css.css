@@ -239,7 +239,7 @@ header p {
 #threshold {
 	margin-top:5px;
 	width: 192px;
-	cursor:url(https://s3.amazonaws.com/luckyplop/f06682dc0d64c7ad9784f7a40466aa293ca1b66b.png), pointer;
+	cursor:url(/assets/images/pointer.png), pointer;
 	-webkit-animation-name:b;
 	-webkit-animation-duration:3.3s;
 	-webkit-animation-iteration-count: 1;
@@ -255,7 +255,7 @@ header p {
 	border-radius: 0;
 	background-size:20px;
 	background-position:center;
-	cursor:url(https://s3.amazonaws.com/luckyplop/f06682dc0d64c7ad9784f7a40466aa293ca1b66b.png), pointer;
+	cursor:url(/assets/images/pointer.png), pointer;
 	background-repeat:no-repeat;
 	width:40px;
 	height:40px;
@@ -545,13 +545,13 @@ header p {
 	border-bottom: 0px solid;
 }
 #layers ul li:hover {
-	cursor:url(https://s3.amazonaws.com/luckyplop/f06682dc0d64c7ad9784f7a40466aa293ca1b66b.png), pointer;
+	cursor:url(/assets/images/pointer.png), pointer;
 	background: #b5d5ff;
 }
 #layers ul li.selected {
 	background: #b5d5ff;
 }
-#layers ul li.selected p{
+#layers ul li.selected p {
 	font-weight:600;
 }
 #layers ul li.active span {

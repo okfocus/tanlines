@@ -44,7 +44,7 @@ function AudioPlayer(instrument, src) {
 	base.seekToBeginning = function () {
 		base.audio.pause();
 		base.audio.currentTime = 0;
-  	base.audio.volume = 1.0;
+  	base.sound.unmute();
 	}
 	
 	// Public: Mute the video
