@@ -61,7 +61,7 @@ function VideoPlayer(instrument, src) {
     video.addEventListener('error', failed, false);
     // video.addEventListener('ended', base.seekToBeginning, false);
 		master.add(base);
-    base.load();
+    // base.load();
   }
   
 	// Public: Tell this channel to load
@@ -126,6 +126,7 @@ function VideoPlayer(instrument, src) {
 		output.style.display = "block";
 		destOpacity = 1.0;
 	}
+	
 	// Private: Hide a video. Does not change display type because it will do a fade.
 	base.hide = function(){
 		destOpacity = 0.0;

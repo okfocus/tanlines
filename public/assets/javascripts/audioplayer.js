@@ -13,15 +13,26 @@ function AudioPlayer(instrument, src) {
   function audioInit(){
     source.src = audioFileUrl;
     source.type = AUDIO_MIME;
-
-    base.audio.addEventListener('loadedmetadata', audioLoaded, false);
-    base.audio.addEventListener('error', error, false);
+//    base.audio.addEventListener('loadedmetadata', audioLoaded, false);
+//    base.audio.addEventListener('error', error, false);
 		master.add(base);
   }
 
 	// Public: Tell this channel to load
 	base.load = function(){
-    base.audio.appendChild(source);
+    // base.audio.appendChild(source);
+    console.log(src + " gay ");
+		base.sound = soundManager.createSound({
+			id: src,
+			url: audioFileUrl,
+			onload: function(){
+				console.log(src + " loaded");
+				audioLoaded();
+			}
+		});
+		base.sound.load();
+
+    // base.audio.src = source.src;
 	}
   
   // Private: When it loads, tell the master track
@@ -40,12 +51,14 @@ function AudioPlayer(instrument, src) {
 	
 	// Public: Mute the video
   base.mute = function () {
-  	base.audio.volume = 0.0;
+  	base.sound.mute();
+//  	base.audio.volume = 0.0;
   }
   
   // Public: Unmute the video
   base.unmute = function () {
-  	base.audio.volume = 1.0;
+  	base.sound.unmute();
+//  	base.audio.volume = 1.0;
   }
   
   // Public: Set the volume to an arbitrary value

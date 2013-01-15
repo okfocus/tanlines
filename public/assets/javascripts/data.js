@@ -64,14 +64,22 @@ var instruments = [
 	new Instrument('vocals',  [ ]),
 	new Instrument('piano',   [ 'piano' ]),
 	new Instrument('drums',   [ 'drums-guitar', 'floortom' ]),
+	new Instrument('synths',  [ 'microkorg', 'keyboard-with-amp', 'synth' ]),
 	new Instrument('guitars', [ 'guitar-voice' ]),
 	new Instrument('strings', [ 'strings' ]),
-	new Instrument('synths',  [ 'microkorg', 'keyboard-with-amp', 'synth' ]),
 ];
 
-// Start the videos loading.
-// Once they're ready, playback starts automatically.
-master.load();
+// Start the videos loading, once the page has loaded.
+// Once the media is ready, playback starts automatically.
+$(function(){
+	soundManager.setup({
+		url: '/assets/swfs/',
+		onready: function() {
+			console.log("soundmanager ready");
+			master.load();
+		}
+	});
+});
 
 // Initialize the background toggles
 var bg = new Background ([

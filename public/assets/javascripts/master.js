@@ -4,7 +4,6 @@ var browserErrorMsg = 'Your browser doesn\'t support HTML5 video!<br>' +
             'Please try <a href="http://www.google.com/chrome">Chrome</a> or ' +
 	          '<a href="http://www.getfirefox.org/">Firefox</a>';
 
-
 // Master sync object
 function Master() {
 	var base = this;
@@ -60,13 +59,13 @@ function Master() {
 		console.log(loadIndex, loading);
 	}
 	this.load = function(){
-		if (loadIndex < master.mediaCount) {
-			for (; loading < 4; loading++) {
+		while (loadIndex < master.mediaCount) {
+			//for (; loading < 4; loading++) {
 				if (! players[loadIndex].loaded) {
 					players[loadIndex].load();
 				}
 				loadIndex += 1;
-			}
+			//}
 		}
 	}
 	
@@ -99,7 +98,7 @@ function Master() {
 		$("body").removeClass("preload");
 		$("body").addClass("checker");
 		console.log("ready!");
-		base.ready();	
+		setTimeout( base.ready, 1000);
 	}
 
 	this.ended = function(){
@@ -141,10 +140,11 @@ function Master() {
 	this.play = function (){
 		ended = false;
 		for (var i = 0; i < instruments.length; i++) {
-			instruments[i].audio.seekToBeginning();
+			// instruments[i].audio.seekToBeginning();
 		}
 		for (var i = 0; i < instruments.length; i++) {
-			instruments[i].audio.audio.play();
+			// instruments[i].audio.audio.play();
+			instruments[i].audio.sound.play()
 		}
 		for (var i = 0; i < videos.length; i++) {
 			videos[i].seekToBeginning();
@@ -166,9 +166,9 @@ function Master() {
 		reset = true;
 		when = clamp(when, 0, 500);
 		for (var i = 0; i < instruments.length; i++) {
-			instruments[i].audio.audio.pause();
-			instruments[i].audio.audio.currentTime = when;
-			instruments[i].audio.audio.volume = 1.0;
+			instruments[i].audio.sound.pause();
+			instruments[i].audio.sound.setPosition( when * 1000 );
+			instruments[i].audio.sound.unmute();
 			instruments[i].auto = true;
 		}
 		for (var i = 0; i < videos.length; i++) {
@@ -183,7 +183,7 @@ function Master() {
 			ended = false;
 			startTime = Date.now() - (when * 1000);
 			for (var i = 0; i < instruments.length; i++) {
-				instruments[i].audio.audio.play();
+				instruments[i].audio.sound.play();
 			}
 			for (var i = 0; i < videos.length; i++) {
 				videos[i].video.play();
