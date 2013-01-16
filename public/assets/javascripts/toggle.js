@@ -57,11 +57,14 @@ function smear(){
 		masterCanvas.innerWidth = window.innerWidth;
 		masterCanvas.innerHeight = window.innerHeight;
 		masterCanvas.style.display = "block";
+		$("#smear").addClass("experimenting");
 	}
 	else {
 		masterCanvas.style.display = "none";
+		$("#smear").removeClass("experimenting");
 	}
 }
+$("#smear").click(smear);
 
 function Background (bgz, def) {
 	for (var i = 0; i < bgz.length; i++) {

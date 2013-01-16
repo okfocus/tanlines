@@ -859,6 +859,18 @@ footer {
 	z-index: 10000;
 	display: none;
 }
+#smear {
+	cursor: pointer;
+}
+#smear:hover {
+	color: red;
+	text-decoration: underline;
+}
+#smear.experimenting {
+	color: #80f;
+	text-decoration: underline;
+	font-weight: bold;
+}
 
 .flip {
 	-moz-transform: scaleX(-1);
