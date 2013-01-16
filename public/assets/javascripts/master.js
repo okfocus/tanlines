@@ -15,7 +15,7 @@ function Master() {
 	var paused = false;
 	var reset = false;
 	var ended = false;
-
+	
 	function init (){
 		checkBrowser();
 		$("#replay").click(base.replay);

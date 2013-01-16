@@ -46,6 +46,23 @@ $("#toolbar .color").click(function(){
   }
 });
 
+var SMEARING = false;
+function smear(){
+	SMEARING = ! SMEARING;
+	if (SMEARING) {
+		for (var i = 0; i < videos.length; i++) {
+			var ctx = videos[i].output.getContext('2d');
+			ctx.clearRect(0, 0, videos[i].width, videos[i].height);
+		}
+		masterCanvas.innerWidth = window.innerWidth;
+		masterCanvas.innerHeight = window.innerHeight;
+		masterCanvas.style.display = "block";
+	}
+	else {
+		masterCanvas.style.display = "none";
+	}
+}
+
 function Background (bgz, def) {
 	for (var i = 0; i < bgz.length; i++) {
 		var bg = bgz[i];

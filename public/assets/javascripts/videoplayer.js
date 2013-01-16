@@ -1,5 +1,12 @@
 
 var dragCurtain = document.getElementById("drag_curtain");
+var masterCanvas = document.createElement("canvas");
+var masterCtx = this.masterCanvas.getContext("2d");
+masterCanvas.width = window.innerWidth;
+masterCanvas.height = window.innerHeight;
+masterCanvas.id = "masterCanvas";
+masterCanvas.className = "curtain";
+document.body.appendChild( masterCanvas );
 
 // The VideoPlayer coordinates playback of an individual video to a canvas,
 // keying out white, mouse events, etc..
@@ -216,18 +223,22 @@ function VideoPlayer(instrument, src) {
 		}
 
 		// If we're hovering, draw a moving dashed selection rectangle.
-    if (base.hovering) {
+    if (base.hovering && ! SMEARING) {
     	drawAnts(imageData, width, height, t);
     }
 
 		// Draw the transparent image to a canvas and we're done.
 		// Commented-out functions were used when painting to a single master canvas.
 
-		// out.save();
-		// buf.putImageData(image, 0, 0, 0, 0, width, height);
-		// out.drawImage(buffer, 0,0);
-
-    out.putImageData(image, 0, 0, 0, 0, width, height);
+		if (SMEARING) {
+		  masterCtx.save();
+		  masterCtx.translate(base.x, window.innerHeight - base.y - base.width);
+		  buf.putImageData(image, 0, 0, 0, 0, width, height);
+			masterCtx.drawImage(buffer, 0, 0);
+			masterCtx.restore();
+		} else {
+			out.putImageData(image, 0, 0, 0, 0, width, height);
+		}
 
 		// out.restore();
   }
@@ -426,4 +437,7 @@ window.onresize = function(){
 	}
 	oldWidth = window.innerWidth;
 	oldHeight = window.innerHeight;
+	masterCanvas.width = oldWidth;
+	masterCanvas.height = oldHeight;
+	masterCtx.clearRect(0, 0, oldWidth, oldHeight);
 }
