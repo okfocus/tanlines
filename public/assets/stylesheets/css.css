@@ -23,10 +23,7 @@ video {
 canvas {
 	display: none;
 }
-#social {
-	opacity: 1;
-	-webkit-transition: opacity 2s ease-out;
-}
+
 .twitter-share-button {
 	position: relative;
 	top: 4px;
@@ -127,7 +124,9 @@ header{
 header * {
 	margin:0;
 }
-
+a {
+	cursor:url(/assets/images/pointer.png), pointer;
+}
 #dumpfm, #instagram {
 	border:0 solid;
 	position:fixed;
@@ -224,6 +223,60 @@ header * {
 
 }
 
+@-webkit-keyframes c {
+	0% {
+		opacity: 0;
+		-o-transform: translate3d(0, 40px, 0);
+		-ms-transform: translate3d(0, 40px, 0);
+		-moz-transform: translate3d(0, 40px, 0);
+		-webkit-transform: translate3d(0, 40px, 0);
+		transform: translate3d(0, 40px, 0);
+	}
+
+	30% {
+		opacity: 1;
+		-o-transform: translate3d(0, 45px, 0);
+		-ms-transform: translate3d(0, 45px, 0);
+		-moz-transform: translate3d(0, 45px, 0);
+		-webkit-transform: translate3d(0, 45px, 0);
+		transform: translate3d(0, 45px, 0);
+	}
+
+	100% {
+		opacity: 1;
+		-o-transform: translate3d(0, 0px, 0);
+		-ms-transform: translate3d(0, 0px, 0);
+		-moz-transform: translate3d(0, 0px, 0);
+		-webkit-transform: translate3d(0, 0px, 0);
+		transform: translate3d(0, 0px, 0);
+	}
+
+}
+
+.preload #creators, .preload #okfocus{
+	display:none;
+}
+
+#creators {
+	position: absolute;
+	bottom: 1%;
+	right: 1%;
+	-webkit-animation-name: c;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-delay: 0s;
+}
+#okfocus {
+	position: absolute;
+	bottom: 1%;
+	left: 1%;
+	height:25px;
+	-webkit-animation-name: c;
+	-webkit-animation-duration: 1.3s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-delay: 0s;
+}
+
 
 h1 {
 	font-family: 'Knewave', cursive;
@@ -250,14 +303,22 @@ header p {
 
 #threshold {
 	margin-top:5px;
-	width: 192px;
+	width: 173px;
 	cursor:url(/assets/images/pointer.png), pointer;
 	-webkit-animation-name:b;
 	-webkit-animation-duration:3.3s;
 	-webkit-animation-iteration-count: 1;
 	-webkit-animation-delay: 0s;
 }
-
+#social {
+	margin-top:-7px;
+	opacity: 1;
+	-webkit-transition: opacity 2s ease-out;
+	-webkit-animation-name:b;
+	-webkit-animation-duration:3.5s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-delay: 0s;
+}
 #controls span input{
 	-moz-appearance: none;
 	-webkit-appearance: none;
@@ -626,19 +687,6 @@ footer {
 	font-size:10px;
 	font-family:'Helvetica',sans-serif;
 	text-align:center;
-}
-
-#creators {
-	position: absolute;
-	bottom: 20px;
-	left: 30px;
-	border: 0;
-}
-#okfocus {
-	position: absolute;
-	bottom: 20px;
-	right: 30px;
-	border: 0;
 }
 
 .curtain {
