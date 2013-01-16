@@ -81,7 +81,7 @@ var embedMode = "";
 var DUMPFM_URL = "http://dump.fm/fullscreen?nologin=1";
 var INSTAGRAM_URL =	"http://labs.okfoc.us/not-the-same/instagram.php";
 var VIDEO_URL = "http://www.youtube.com/watch?v=66bnRxgHGcA";
-var STREETCAM_URL = "http://labs.okfoc.us/not-the-same/gw.html";
+var STREETCAM_URL = "http://labs.okfoc.us/not-the-same/times.html";
 var STREETVIEW_URL = "http://labs.okfoc.us/not-the-same/streetview.php";
 
 $('.dumptoggle').click(function() {
