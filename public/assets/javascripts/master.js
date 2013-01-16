@@ -19,15 +19,12 @@ function Master() {
 	function init (){
 		checkBrowser();
 		$("#replay").click(base.replay);
-/*
-		setInterval(function(){
-			base.readyCount += 0.05
-			$("#loaded").css("width", Math.floor( 100 * base.readyCount / (base.mediaCount || 20) ) + "%" );
-		}, 400);
-*/
 	}
 	function checkBrowser (){
-		if ($.browser.webkit) {
+		function ie_ten(){
+			return ($.browser.ie && parseInt($.browser.version.split(".")[0]) == 10)
+		}
+		if ($.browser.webkit || ie_ten()) {
 			VIDEO_EXTENSION = "mp4";
 			VIDEO_MIME = 'video/mp4; codecs="avc1.42E01E"';
 			AUDIO_EXTENSION = "mp3";
@@ -38,8 +35,8 @@ function Master() {
 			VIDEO_EXTENSION = "webm";
 			VIDEO_MIME = 'video/webm';
 			// using soundmanager for audio, so this doesn't matter
-//			AUDIO_EXTENSION = "ogg";
-//			AUDIO_MIME = 'audio/ogg';
+			// AUDIO_EXTENSION = "ogg";
+			// AUDIO_MIME = 'audio/ogg';
 			AUDIO_EXTENSION = "mp3";
 			AUDIO_MIME = 'audio/mpeg';
 		}
@@ -66,12 +63,10 @@ function Master() {
 	}
 	this.load = function(){
 		while (loadIndex < master.mediaCount) {
-			//for (; loading < 4; loading++) {
-				if (! players[loadIndex].loaded) {
-					players[loadIndex].load();
-				}
-				loadIndex += 1;
-			//}
+			if (! players[loadIndex].loaded) {
+				players[loadIndex].load();
+			}
+			loadIndex += 1;
 		}
 	}
 	
