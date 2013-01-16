@@ -72,6 +72,9 @@ var instruments = [
 // Start the videos loading, once the page has loaded.
 // Once the media is ready, playback starts automatically.
 $(function(){
+	if("fdSlider" in window && typeof (fdSlider.onDomReady) != "undefined") {
+		try { fdSlider.onDomReady(); } catch(err) {}
+	}
 	soundManager.setup({
 		url: '/assets/swfs/',
 		onready: function() {
