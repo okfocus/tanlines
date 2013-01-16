@@ -426,8 +426,8 @@ header p {
 	box-shadow: 0 0 10px #eee;
 	z-index: 10000 !important;
 	position: absolute;
-	top: 50px;
-	left: 30px;
+	top: 6%;
+	left: 1%;
 }
 #toolbar ul {
 	list-style: none;
@@ -575,8 +575,8 @@ header p {
 	box-shadow: 0 0 10px #eee;
 	z-index: 10000 !important;
 	position: absolute;
-	top: 80px;
-	right: 30px;
+	bottom: 18%;
+	right: 1%;
 }
 #layers ul {
 	list-style: none;
@@ -703,7 +703,8 @@ footer {
 	-webkit-animation-duration: 1.3s;
 	-webkit-animation-iteration-count: infinite;
 	-webkit-animation-timing-function: linear;
-	position: absolute;
+	position: fixed;
+	opacity:0.8;
 	top: 50%;
 	left: 50%;
 	width: 200px;
