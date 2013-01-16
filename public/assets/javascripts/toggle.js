@@ -57,6 +57,7 @@ function smear(){
 		masterCanvas.innerWidth = window.innerWidth;
 		masterCanvas.innerHeight = window.innerHeight;
 		masterCanvas.style.display = "block";
+		masterCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 		$("#smear").addClass("experimenting");
 	}
 	else {
