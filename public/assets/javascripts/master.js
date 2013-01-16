@@ -33,14 +33,17 @@ function Master() {
 			AUDIO_EXTENSION = "mp3";
 			AUDIO_MIME = 'audio/mpeg';
 		}
-/*
+
 		else if ($.browser.mozilla) {
-			VIDEO_EXTENSION = "ogv";
-			VIDEO_MIME = 'video/ogg';
-			AUDIO_EXTENSION = "ogg";
-			AUDIO_MIME = 'audio/ogg';
+			VIDEO_EXTENSION = "webm";
+			VIDEO_MIME = 'video/webm';
+			// using soundmanager for audio, so this doesn't matter
+//			AUDIO_EXTENSION = "ogg";
+//			AUDIO_MIME = 'audio/ogg';
+			AUDIO_EXTENSION = "mp3";
+			AUDIO_MIME = 'audio/mpeg';
 		}
-*/
+
 		else {
 			// can't play html5 video..
 			this.error = true;
