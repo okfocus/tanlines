@@ -228,20 +228,35 @@ function VideoPlayer(instrument, src) {
     }
 
 		// Draw the transparent image to a canvas and we're done.
-		// Commented-out functions were used when painting to a single master canvas.
-
+		
+		// Secret button enables sliding mode, where videos are drawn to a master
+		// canvas and nudged around each frame, creating smear patterns.
 		if (SMEARING) {
 		  masterCtx.save();
+		  
+		  // pushing the canvases around
+		  base.x += dx;
+		  base.y += dy;
+		  if (base.x + base.width > masterCanvas.width) { dx = -dx; base.x = masterCanvas.width - base.width; }
+		  if (base.x < 0) { dx = -dx; base.x = 1; }
+		  if (base.y + base.height > masterCanvas.height) { dy = -dy; base.y = masterCanvas.height - base.height; }
+		  if (base.y < 0) { dy = -dy; base.y = 1; }
+		  base.setXY(base.x, base.y);
+		  
 		  masterCtx.translate(base.x, window.innerHeight - base.y - base.width);
 		  buf.putImageData(image, 0, 0, 0, 0, width, height);
 			masterCtx.drawImage(buffer, 0, 0);
 			masterCtx.restore();
-		} else {
+		}
+		
+		// Normal behavior: Videos are drawn to visible canvases.
+		else {
 			out.putImageData(image, 0, 0, 0, 0, width, height);
 		}
-
-		// out.restore();
   }
+
+	var dx = 0.8;
+	var dy = -0.5;
 
 	// Public: Move the canvas to a specific position.
   base.setXY = function(newx, newy) {
@@ -289,13 +304,15 @@ function VideoPlayer(instrument, src) {
 
 		base.makeMarquee();
 		
-		// Are we resizing, or just dragging?
-		resizing = nearEdgeOfSelection(e, base.m);
-
-		if (resizing) {
-			currentlyFlipped = base.flip;
-			currentlyFlopped = base.flop;
-			resizeMarquee = $.extend({}, base.m);
+		if (! SMEARING) {
+			// Are we resizing, or just dragging?
+			resizing = nearEdgeOfSelection(e, base.m);
+	
+			if (resizing) {
+				currentlyFlipped = base.flip;
+				currentlyFlopped = base.flop;
+				resizeMarquee = $.extend({}, base.m);
+			}
 		}
   }
 
