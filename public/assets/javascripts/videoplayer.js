@@ -1,12 +1,9 @@
 
 var dragCurtain = document.getElementById("drag_curtain");
-var masterCanvas = document.createElement("canvas");
+var masterCanvas = document.getElementById("masterCanvas");
 var masterCtx = this.masterCanvas.getContext("2d");
 masterCanvas.width = window.innerWidth;
 masterCanvas.height = window.innerHeight;
-masterCanvas.id = "masterCanvas";
-masterCanvas.className = "curtain";
-document.body.appendChild( masterCanvas );
 
 // The VideoPlayer coordinates playback of an individual video to a canvas,
 // keying out white, mouse events, etc..
