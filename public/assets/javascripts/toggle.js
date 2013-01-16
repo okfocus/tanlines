@@ -81,7 +81,8 @@ var embedMode = "";
 var DUMPFM_URL = "http://dump.fm/fullscreen?nologin=1";
 var INSTAGRAM_URL =	"http://labs.okfoc.us/not-the-same/instagram.php";
 var VIDEO_URL = "http://www.youtube.com/watch?v=66bnRxgHGcA";
-var STREETCAM_URL = "http://labs.okfoc.us/not-the-same/times.html";
+var STREETCAM_URL = "http://labs.okfoc.us/not-the-same/gw.html";
+var WHITEHOUSE_URL = "http://labs.okfoc.us/not-the-same/whitehouse.html";
 var STREETVIEW_URL = "http://labs.okfoc.us/not-the-same/streetview.php";
 var ASDF_URL = "http://asdf.us/palm/";
 
@@ -108,6 +109,13 @@ $('.streetviewtoggle').click(function(){
 		embedIframe( STREETVIEW_URL );
 	});
 });
+
+$('.whitehousetoggle').click(function(){
+	clearEmbeds(this, "streetview", function(){
+		embedIframe( WHITEHOUSE_URL );
+	});
+});
+
 
 $('.asdftoggle').click(function(){
 	clearEmbeds(this, "asdf", function(){
