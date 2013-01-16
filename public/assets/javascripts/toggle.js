@@ -55,10 +55,10 @@ function Background (bgz, def) {
 		toggle.innerHTML = '<span><input type="radio" name="bg"></span><img src="/assets/images/' + bg + '-small.jpg"><p>' + bg + '</p>';
 		toggle.setAttribute("value", bg);
 		toggle.onclick = function(){
-			$("#instagram").hide();
-			instagramming = false;
-			$(".instagramtoggle input").attr('checked', instagramming);
-			
+			if (embedMode !== "dumpfm") {
+				clearEmbeds(null, null, null);
+			}
+
 			$("#layers").find("li").removeClass("selected");
 			$(this).addClass("selected");
 			var klass = this.getAttribute("value");
@@ -77,45 +77,62 @@ function Background (bgz, def) {
 	}
 }
 
-var dumping = false, instagramming = false;
+var embedMode = "";
 var DUMPFM_URL = "http://dump.fm/fullscreen?nologin=1";
 var INSTAGRAM_URL =	"http://labs.okfoc.us/not-the-same/instagram.php";
+var VIDEO_URL = "http://www.youtube.com/watch?v=66bnRxgHGcA";
+var STREETCAM_URL = "http://labs.okfoc.us/not-the-same/gw.html";
+var STREETVIEW_URL = "http://labs.okfoc.us/not-the-same/streetview.php";
 
 $('.dumptoggle').click(function() {
-	dumping = ! dumping;
-	instagramming = false;
-	$(".dumptoggle input").attr('checked', dumping);
-	$(".instagramtoggle input").attr('checked', instagramming);
-	$("#layers").find("li").removeClass("selected");
-	$(this).addClass("selected");
-	if (dumping) {
-		var iframe = $("<iframe>").attr({ "id": "dumpfm", "src": DUMPFM_URL }).show();
-		$("body").prepend( iframe );
-	}
-	else {
-		$("#dumpfm").remove();
-	}
-	$("#instagram").remove();
+	clearEmbeds(this, "dumpfm", function(){
+		embedIframe( DUMPFM_URL );
+	});
 });
 
 $('.instagramtoggle').click(function() {
-	instagramming = ! instagramming;
-	dumping = false;
-	$("#layers").find("input").attr("checked", false);
-	$(".dumptoggle input").attr('checked', dumping);
-	$(".instagramtoggle input").attr('checked', instagramming);
-	$("#layers").find("li").removeClass("selected");
-	$(this).addClass("selected");
-	if (instagramming) {
-		$("body").prepend( $("<iframe>").attr({ "id": "instagram", "src": INSTAGRAM_URL }).show() );
-	}
-	else {
-		$("#instagram").remove();
-	}
-	$("#dumpfm").remove();
-
-	if (instagramming) {
-		BG = "checker";
-		document.body.className = INVERT ? "invert" : BG;
-	}
+	clearEmbeds(this, "instagram", function(){
+		embedIframe( INSTAGRAM_URL );
+	});
 });
+
+$('.streetcamtoggle').click(function(){
+	clearEmbeds(this, "streetcam", function(){
+		embedIframe( STREETCAM_URL );
+	});
+});
+
+$('.streetviewtoggle').click(function(){
+	clearEmbeds(this, "streetview", function(){
+		embedIframe( STREETVIEW_URL );
+	});
+});
+
+
+function clearEmbeds(el, mode, callback) {
+	$(".embedtoggle input").attr('checked', false);
+	$("#layers").find("li").removeClass("selected");
+	$('iframe.curtain,#okplayer-mask,#okplayer').remove();
+	if (mode && mode != embedMode) {
+		embedMode = mode;
+		$('input', el).attr('checked', 'checked');
+		$(el).addClass("selected");
+		callback();
+		if (embedMode != "dumpfm") {
+			BG = "checker";
+			document.body.className = INVERT ? "invert" : BG;
+		}
+	} else {
+		embedMode = "";
+	}
+}
+
+function embedIframe (url) {
+	$("#pinwheel").show();
+	var $iframe = $("<iframe>").attr({ "class": "curtain", "src": url });
+	$iframe[0].onload = function(){
+		$("#pinwheel").hide();
+		$iframe.show();
+	}
+	$("body").prepend( $iframe );
+}
