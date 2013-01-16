@@ -52,21 +52,6 @@ body.invert header {
 	color: white;
 }
 
-body.forest {
-	background-image: url(/assets/images/forest.jpg);
-	background-size: cover;
-	background-position: center center;
-}
-body.forest #rapper {
-	-webkit-filter: sepia(80%);
-}
-
-body.nightlights {
-	background-image: url(/assets/images/nightlights.jpg);
-	background-size: cover;
-	background-position: center center;
-}
-
 body.beach {
 	background-image: url(/assets/images/beach.gif);
 	background-size: cover;

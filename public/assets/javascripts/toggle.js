@@ -83,6 +83,7 @@ var INSTAGRAM_URL =	"http://labs.okfoc.us/not-the-same/instagram.php";
 var VIDEO_URL = "http://www.youtube.com/watch?v=66bnRxgHGcA";
 var STREETCAM_URL = "http://labs.okfoc.us/not-the-same/gw.html";
 var STREETVIEW_URL = "http://labs.okfoc.us/not-the-same/streetview.php";
+var ASDF_URL = "http://asdf.us/palm/";
 
 $('.dumptoggle').click(function() {
 	clearEmbeds(this, "dumpfm", function(){
@@ -108,6 +109,11 @@ $('.streetviewtoggle').click(function(){
 	});
 });
 
+$('.asdftoggle').click(function(){
+	clearEmbeds(this, "asdf", function(){
+		embedIframe( ASDF_URL );
+	});
+});
 
 function clearEmbeds(el, mode, callback) {
 	$(".embedtoggle input").attr('checked', false);
