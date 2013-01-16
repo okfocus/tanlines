@@ -84,6 +84,8 @@ var VIDEO_URL = "http://www.youtube.com/watch?v=66bnRxgHGcA";
 var STREETCAM_URL = "http://labs.okfoc.us/not-the-same/gw.html";
 var WHITEHOUSE_URL = "http://labs.okfoc.us/not-the-same/whitehouse.html";
 var STREETVIEW_URL = "http://labs.okfoc.us/not-the-same/streetview.php";
+var FISHCAM_URL = "http://labs.okfoc.us/not-the-same/fish.html";
+var STONE_URL = "http://labs.okfoc.us/not-the-same/stone.html"
 var ASDF_URL = "http://asdf.us/palm/";
 
 $('.dumptoggle').click(function() {
@@ -116,6 +118,17 @@ $('.whitehousetoggle').click(function(){
 	});
 });
 
+$('.fishtoggle').click(function(){
+	clearEmbeds(this, "fishcam", function(){
+		embedIframe( FISHCAM_URL );
+	});
+});
+
+$('.stonetoggle').click(function(){
+	clearEmbeds(this, "stonehenge", function(){
+		embedIframe( STONE_URL );
+	});
+});
 
 $('.asdftoggle').click(function(){
 	clearEmbeds(this, "asdf", function(){
