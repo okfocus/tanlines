@@ -435,6 +435,21 @@ header p {
 	-moz-animation-iteration-count: 1;
 	-moz-animation-delay: 0s;
 }
+
+
+#finished #social {
+	margin-top:10px;
+	opacity: 1;
+	-webkit-transition: opacity 0s ease-out;
+	-webkit-animation-name:b;
+	-webkit-animation-duration:0s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-delay: 0s;
+	-moz-animation-name: b;
+	-moz-animation-duration: 0s;
+	-moz-animation-iteration-count: 1;
+	-moz-animation-delay: 0s;
+}
 #controls span input{
 	-moz-appearance: none;
 	-webkit-appearance: none;
@@ -453,6 +468,15 @@ header p {
 }
 
 #finished {
+	-webkit-transition: opacity 2s ease-out;
+	-webkit-animation-name:b;
+	-webkit-animation-duration:3.5s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-delay: 0s;
+	-moz-animation-name: b;
+	-moz-animation-duration: 3.5s;
+	-moz-animation-iteration-count: 1;
+	-moz-animation-delay: 0s;
 	font-size: 13px;
 	width: 250px;
 	padding: 10px;
@@ -890,29 +914,8 @@ footer {
 	-webkit-transform: scaleX(-1) scaleY(-1);
 	transform: scaleX(-1) scaleY(-1);
 }
+ 
 
-/*
-@-moz-document url-prefix() { 
-  body {
-     display:none;
-  }
-	html {
-		text-align:center;
-		display:table;
-		background-color: white;
-		background-image: url(/assets/images/checker2.png);
-		background-size: auto;
-		background-position: center center;
-	}
-	html:after {
-		content:"This site is only rad in Chrome or Safari, sorry bout that person using the Firefox thingy..";
-		font-family: 'Knewave', cursive;
-		display:table-cell;
-		vertical-align:middle;
-		text-shadow:-1px 1px rgba(255,255,255,0.7);
-	}
-}
-*/
 @media handheld, only screen and (max-width: 480px), only screen and (max-device-width: 480px)  {
   body {
      display:none;
