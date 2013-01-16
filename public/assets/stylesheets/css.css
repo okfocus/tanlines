@@ -684,6 +684,10 @@ footer {
 	z-index:0;
 	/*pointer-events: none;*/
 }
+#drag_curtain {
+	z-index: 987654321;
+	display: none;
+}
 
 @-webkit-keyframes spin {
 	from {

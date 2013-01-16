@@ -1,4 +1,6 @@
 
+var dragCurtain = document.getElementById("drag_curtain");
+
 // The VideoPlayer coordinates playback of an individual video to a canvas,
 // keying out white, mouse events, etc..
 function VideoPlayer(instrument, src) {
@@ -265,6 +267,9 @@ function VideoPlayer(instrument, src) {
   
   // When we click on a video..
   output.onmousedown = function(e){
+
+		dragCurtain.style.display = "block";
+
     x = base.x;
     y = base.y;
     startX = e.pageX;
@@ -299,7 +304,7 @@ var resizeMarquee = {};
 
 // While we're dragging/resizing..
 // The mouse move/up functions are global because otherwise you lose focus easily.
-window.onmousemove = function(e){
+dragCurtain.onmousemove = function(e){
   if (dragging) {
   	if (resizing) {
 			var dy = e.pageY - startY;
@@ -390,7 +395,7 @@ window.onmousemove = function(e){
 }
 
 // When we're done dragging, store the new state.
-window.onmouseup = function(){
+dragCurtain.onmouseup = function(){
   if (dragging) {
   	if (resizing) {
   		dragging.m = resizeMarquee;
@@ -406,6 +411,7 @@ window.onmouseup = function(){
     dragging = false;
     resizing = false;
   }
+	dragCurtain.style.display = "none";
 }
 
 // When we resize the window, reposition the videos proportionally.
