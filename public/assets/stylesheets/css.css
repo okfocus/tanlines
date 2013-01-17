@@ -730,7 +730,7 @@ header p {
 	box-shadow: 0 0 10px #eee;
 	z-index: 10000 !important;
 	position: absolute;
-	bottom: 18%;
+	top: 18%;
 	right: 1%;
 }
 #layers ul {
@@ -916,26 +916,6 @@ footer {
 }
  
 
-@media handheld, only screen and (max-width: 480px), only screen and (max-device-width: 480px)  {
-  body {
-     display:none;
-  }
-	html {
-		text-align:center;
-		display:table;
-		background-color: white;
-		background-image: url(/assets/images/checker2.png);
-		background-size: auto;
-		background-position: center center;
-	}
-	html:after {
-		content:"This site is only rad on Desktop machines, sorry bout that person using the mobile thingy..";
-		font-family: 'Knewave', cursive;
-		display:table-cell;
-		vertical-align:middle;
-		text-shadow:-1px 1px rgba(255,255,255,0.7);
-	}
-}
 
 @media all and (-webkit-min-device-pixel-ratio:10000), not all and (-webkit-min-device-pixel-ratio:0)
 {

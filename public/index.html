@@ -43,6 +43,30 @@ jgs  |`'-----'`\      \
          -->
 
 <head>
+	<style>
+	@media handheld, only screen and (max-width: 480px), only screen and (max-device-width: 480px)  {
+	  body {
+	     display:none;
+	  }
+		html {
+			text-align:center;
+			display:table;
+			background-color: white;
+			background-image: url(/assets/images/checker2.png);
+			background-size: auto;
+			background-position: center center;
+		}
+		html:after {
+			content:"This site is only rad on Desktop machines, sorry bout that person using the mobile thingy..";
+			font-family: 'Knewave', cursive;
+			display:table-cell;
+			font-size:60px;
+			vertical-align:middle;
+			text-shadow:-1px 1px rgba(255,255,255,0.7);
+		}
+	}
+
+	</style>
 	<title>Tanlines - Not The Same</title>
 	<link rel="stylesheet" href="/assets/stylesheets/css.css">
 	<meta name="description" content="Tanlines - Not The Same, an alpha channel HTML5 video experiment by OKFocus" />
@@ -178,7 +202,7 @@ jgs  |`'-----'`\      \
 		-->
 	</div>
 	
-	<a target="_blank" href="http://thecreatorsproject.com/"><img src="/assets/images/creators_project2.png" id="creators" alt="The Creators Project"></a>
+	<a target="_blank" href="http://thecreatorsproject.com/"><img src="/assets/images/tcp.png" id="creators" alt="The Creators Project"></a>
 	<a target="_blank" href="http://okfoc.us/"><img src="/assets/images/okfocus_logo2.png" id="okfocus" alt="OKFocus"></a>
 
 	<div id="rapper">
