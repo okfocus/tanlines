@@ -429,6 +429,10 @@ header p {
 	-moz-animation-iteration-count: 1;
 	-moz-animation-delay: 0s;
 }
+header #tanlineslink {
+	text-decoration: none;
+	color: #000;
+}
 
 #threshold {
 	margin-top:5px;
