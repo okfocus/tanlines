@@ -461,7 +461,6 @@ header #tanlineslink {
 	-moz-animation-delay: 0s;
 }
 
-
 #finished #social {
 	margin-top:10px;
 	opacity: 1;
@@ -503,17 +502,26 @@ header #tanlineslink {
 	-moz-animation-iteration-count: 1;
 	-moz-animation-delay: 0s;
 	font-size: 13px;
-	width: 250px;
+	width: 450px;
 	padding: 10px;
 	box-shadow: 0 3px 5px #888;
 	background: rgba(255,255,255,0.9);
 	position: absolute;
 	top: 20%;
 	left: 50%;
-	margin-left: -135px;
+	margin-left: -235px;
 	text-align: center;
 	display: none;
+	display: block;
 	z-index: 100000;
+}
+#itunes {
+	width: 160px;
+	margin-top: 10px;
+}
+#albumcover {
+	width: 200px;
+	float: left;
 }
 #finished #twitter {
 	width: 64px;
