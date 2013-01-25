@@ -345,14 +345,7 @@ a {
 .preload #logos {
 	display:none;
 }
-/*
-#logos {
-	position: absolute;
-	bottom: 1%;
-	right: 1%;
-	width: 150px;
-	text-align: right;
-}*/
+
 #creators {
 	-webkit-animation-name: c;
 	-webkit-animation-duration: 1s;
@@ -369,9 +362,9 @@ a {
 }
 #okfocus {
 	position: absolute;
-	bottom: 1.2%;
+	bottom: 1.6%;
 	left: 1%;
-	height: 17px;
+	height: 16px;
 	-webkit-animation-name: c;
 	-webkit-animation-duration: 1.3s;
 	-webkit-animation-iteration-count: 1;
@@ -382,7 +375,7 @@ a {
 	-moz-animation-delay: 0s;
 }
 #panther {
-	height: 40px;
+	height: 48px;
 	position:absolute;
 	bottom:0;
 	left:50%;
