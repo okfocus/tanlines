@@ -506,8 +506,7 @@ header #tanlineslink {
 }
 
 #finished {
-	-webkit-transition: opacity 2s ease-out;
-	-webkit-animation-name:b;
+	-webkit-animation-name: b;
 	-webkit-animation-duration:3.5s;
 	-webkit-animation-iteration-count: 1;
 	-webkit-animation-delay: 0s;
@@ -783,7 +782,7 @@ header #tanlineslink {
 	right: 1%;
 }
 #layers .handle {
-	height: 20px;
+	height: 32px;
 }
 #layers ul {
 	list-style: none;
@@ -792,7 +791,7 @@ header #tanlineslink {
 	background: #d6d6d6;
 	overflow-y: scroll;
 	height: 150px;
-	margin-top: 12px;
+	margin-top: 0;
 	border-top: 1px solid #909090;
 }
 #layers ul li {
