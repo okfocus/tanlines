@@ -577,12 +577,15 @@ header p {
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
 	padding-bottom: 15px;
-	padding-top: 20px;
+	padding-top: 0px;
 	box-shadow: 0 0 10px #eee;
 	z-index: 10000 !important;
 	position: absolute;
 	top: 6%;
 	left: 1%;
+}
+#toolbar .handle {
+	height: 20px;
 }
 #toolbar ul {
 	list-style: none;
@@ -725,13 +728,16 @@ header p {
 	-moz-border-radius-topright: 4px;
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
-	padding-top: 20px;
+	padding-top: 0px;
 	height: 203px;
 	box-shadow: 0 0 10px #eee;
 	z-index: 10000 !important;
 	position: absolute;
 	top: 18%;
 	right: 1%;
+}
+#layers .handle {
+	height: 20px;
 }
 #layers ul {
 	list-style: none;

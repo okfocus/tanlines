@@ -125,4 +125,4 @@ function nearEdgeOfSelection (e, m) {
     }
 })(jQuery);
 
-$('#toolbar, #layers').drags();
+$('#toolbar, #layers').drags({ 	handle: ".handle" });
