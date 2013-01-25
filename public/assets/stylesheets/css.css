@@ -345,14 +345,14 @@ a {
 .preload #logos {
 	display:none;
 }
-
+/*
 #logos {
 	position: absolute;
 	bottom: 1%;
 	right: 1%;
 	width: 150px;
 	text-align: right;
-}
+}*/
 #creators {
 	-webkit-animation-name: c;
 	-webkit-animation-duration: 1s;
@@ -362,9 +362,16 @@ a {
 	-moz-animation-duration: 1s;
 	-moz-animation-iteration-count: 1;
 	-moz-animation-delay: 0s;
+	position: absolute;
+ 	bottom: 1%;
+ 	right: 1%;
+	width: 150px;
 }
 #okfocus {
-	height:15px;
+	position: absolute;
+	bottom: 1.2%;
+	left: 1%;
+	height: 17px;
 	-webkit-animation-name: c;
 	-webkit-animation-duration: 1.3s;
 	-webkit-animation-iteration-count: 1;
@@ -375,7 +382,11 @@ a {
 	-moz-animation-delay: 0s;
 }
 #panther {
-	height: 30px;
+	height: 40px;
+	position:absolute;
+	bottom:0;
+	left:50%;
+	margin-left:-50px;
 	-webkit-animation-name: c;
 	-webkit-animation-duration: 1.3s;
 	-webkit-animation-iteration-count: 1;
