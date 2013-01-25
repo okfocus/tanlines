@@ -512,7 +512,6 @@ header #tanlineslink {
 	margin-left: -235px;
 	text-align: center;
 	display: none;
-	display: block;
 	z-index: 100000;
 }
 #itunes {
