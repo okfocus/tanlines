@@ -108,6 +108,7 @@ var STREETVIEW_URL = "http://labs.okfoc.us/not-the-same/streetview.php";
 var FISHCAM_URL = "http://labs.okfoc.us/not-the-same/fish.html";
 var STONE_URL = "http://labs.okfoc.us/not-the-same/stone.html"
 var ASDF_URL = "http://asdf.us/palm/";
+var VAL_URL = "http://labs.okfoc.us/not-the-same/4.php";
 
 $('.dumptoggle').click(function() {
 	clearEmbeds(this, "dumpfm", function(){
@@ -142,6 +143,12 @@ $('.whitehousetoggle').click(function(){
 $('.fishtoggle').click(function(){
 	clearEmbeds(this, "fishcam", function(){
 		embedIframe( FISHCAM_URL );
+	});
+});
+
+$('.valtoggle').click(function(){
+	clearEmbeds(this, "val", function(){
+		embedIframe( VAL_URL );
 	});
 });
 
